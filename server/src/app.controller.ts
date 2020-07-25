@@ -1,9 +1,17 @@
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Request,
+  Post,
+  UseGuards,
+  Body,
+} from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
+import { User } from './users/models/user.model';
 
 @Controller()
 export class AppController {
@@ -14,17 +22,10 @@ export class AppController {
   ) {}
 
   @Post('auth/signup')
-  async signup(@Request() req) {
-    // const {
-    //   body: { email, password },
-    // } = req;
-    const email = req.body.email as string;
-    const password = req.body.password as string;
-
-    const resp = await this.usersService.create({ email, password });
+  async signup(@Body() user: User) {
+    const resp = await this.usersService.create(user);
 
     return resp;
-    // return
   }
 
   @UseGuards(LocalAuthGuard)
