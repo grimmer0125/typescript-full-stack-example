@@ -1,13 +1,25 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { useForm } from "react-hook-form";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 import styles from "./Account.module.css";
+import { signup } from "./accountSlice";
 
 export default function Signup() {
+  const dispatch = useDispatch();
+  const loginStatus = useSelector((state: any) => state.account.loginStatus);
+  console.log("loginStatus:", loginStatus);
+  // const error = useSelector((state) => state.posts.error);
+
   const { register, handleSubmit, watch, errors } = useForm();
   console.log("errors:", errors);
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    console.log("submit:", data);
+    const resultAction = await dispatch(signup(data));
+    console.log("after submit:", resultAction); // type: "user/signup/rejected",
+    // unwrapResult(resultAction);
   };
 
   console.log(watch("example")); // watch input value by passing the name of it

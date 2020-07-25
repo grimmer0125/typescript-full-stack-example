@@ -11,6 +11,11 @@ export class AppController {
     private authService: AuthService,
   ) {}
 
+  @Post('auth/signup')
+  async signup(@Request() req) {
+    return 'register ok';
+  }
+
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
