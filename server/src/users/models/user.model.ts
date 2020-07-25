@@ -1,13 +1,26 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
+@Entity()
 export class User {
   @Field(type => Int)
-  id: number;
+  @PrimaryGeneratedColumn()
+  id?: number;
 
-  @Field({ nullable: true })
-  firstName?: string;
+  // @Field({ nullable: true })
+  // @Column()
+  // firstName?: string;
 
-  @Field({ nullable: true })
-  lastName?: string;
+  // @Field({ nullable: true })
+  // @Column()
+  // lastName?: string;
+
+  @Field()
+  @Column()
+  email: string;
+
+  @Field()
+  @Column()
+  password: string;
 }
