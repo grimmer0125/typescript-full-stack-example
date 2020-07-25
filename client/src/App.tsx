@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Test1 from "./Test1";
 import { Counter } from "./features/counter/Counter";
 import Signup from "./features/account/Signup";
+import Login from "./features/account/Login";
 
 export default function App() {
   return (
@@ -18,6 +19,9 @@ export default function App() {
           <Route path="/signup">
             <Signup />
           </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
           <Route path="/test1">
             <Test1 />
           </Route>
@@ -28,7 +32,7 @@ export default function App() {
             <Users />
           </Route>
           <Route path="/">
-            <Home />
+            <Login />
           </Route>
         </Switch>
       </div>

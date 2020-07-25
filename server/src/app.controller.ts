@@ -23,7 +23,7 @@ export class AppController {
 
   @Post('auth/signup')
   async signup(@Body() user: User) {
-    const resp = await this.usersService.create(user);
+    const resp = await this.authService.signup(user);
 
     return resp;
   }
