@@ -5,6 +5,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* stretch body to the whole page */
+  height: 100vh;
+  /* define a flex container */
+  display: flex;
+  /* arrange items in column  */
+  flex-direction: column;
+  /* align vertically center */
+  justify-content: center;
+  align-items: center;
 }
 
 code {
