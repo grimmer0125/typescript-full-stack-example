@@ -50,9 +50,7 @@ export default function Signup() {
           ref={register}
         />
       </div>
-      <div style={{ height: 50 }}>
-        {errors.email && <p>{errors.email.message}</p>}
-      </div>
+      <div style={{ height: 50 }}>{errors.email && errors.email.message}</div>
       <div>
         <button className={styles.button} onClick={handleSubmit(onSubmit)}>
           Signup
