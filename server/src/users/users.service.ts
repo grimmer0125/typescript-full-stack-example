@@ -21,7 +21,6 @@ export class UsersService {
     // user.firstName = createUserDto.firstName;
     // user.lastName = createUserDto.lastName;
     // user.email = createUserDto.email;
-    console.log('b:', bcrypt);
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(user.password, salt);
 

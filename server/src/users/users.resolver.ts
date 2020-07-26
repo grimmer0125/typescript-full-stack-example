@@ -11,7 +11,13 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard)
   whoAmI(@CurrentUser() user: User) {
     console.log('user from token:', user);
+    // TODO: implement it later
     //return this.usersService.findById(user.id);
-    return { id: 0, firstName: 'a', lastName: 'b' };
+    return { id: 0, username: 'andy' };
+  }
+
+  @Query(returns => String)
+  async hello() {
+    return 'world';
   }
 }
