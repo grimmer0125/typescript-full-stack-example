@@ -30,8 +30,14 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { username: user.username, id: user.id };
+    let expireAccessToken = '90m';
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      expireAccessToken = '30d';
+    }
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        expiresIn: expireAccessToken,
+      }),
     };
   }
 }
