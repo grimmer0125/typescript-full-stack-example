@@ -8,14 +8,6 @@ export class User {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  // @Field({ nullable: true })
-  // @Column()
-  // firstName?: string;
-
-  // @Field({ nullable: true })
-  // @Column()
-  // lastName?: string;
-
   @Field()
   @Column()
   email: string;

@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Dispatch } from "redux";
 
-import client from "../../api/account-restful";
+import RestfulAccountAPI from "../../api/account-restful";
+import GraphQLAPI from "../../api/graphql_api";
 enum LoinStatus {
   Logout,
   LoggingIn,
@@ -12,7 +13,7 @@ enum LoinStatus {
 export const signup = createAsyncThunk(
   "user/signup",
   async (user: { username: string; email: string; password: string }) => {
-    const response = await client.signup(user);
+    const response = await RestfulAccountAPI.signup(user);
     return response;
   }
 );
@@ -20,8 +21,18 @@ export const signup = createAsyncThunk(
 export const login = createAsyncThunk(
   "user/login",
   async (user: { username: string; password: string }) => {
-    const response = await client.login(user);
+    const response = await RestfulAccountAPI.login(user);
     console.log("login resp:", response);
+    return response;
+  }
+);
+
+// TODO: figure this apollo client's typing
+export const getProfile = createAsyncThunk(
+  "user/profile",
+  async (client: any) => {
+    const response = await GraphQLAPI.getProfile(client);
+    console.log("profile resp:", response);
     return response;
   }
 );

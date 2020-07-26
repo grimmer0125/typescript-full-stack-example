@@ -62,14 +62,14 @@ async function login(loginArg: {
 
   if (response.ok) {
     const data = await response.json();
-    console.log("login response ok:", data);
 
     //{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTIzQGxuLmNvbSIsImlkIjoxNSwiaWF0IjoxNTk1NzAwNzgzLCJleHAiOjE2MDA4ODQ3ODN9.4aRrQE9X64lWsT1ZV2ieMhf3tlMXtMB-5P_gnwCwMw4"}
     // const { tokens } = data;
 
     // save accessToken in localStorage
-    const { accessToken } = data;
-    localStorage.setItem("accounts:accessToken", accessToken);
+    const { access_token } = data;
+    console.log("login response ok:", data);
+    localStorage.setItem("access_token", access_token);
 
     return data;
   }

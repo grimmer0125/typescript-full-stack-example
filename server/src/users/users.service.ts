@@ -9,8 +9,6 @@ const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[];
-
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,

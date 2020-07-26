@@ -12,6 +12,7 @@ export interface LoginSignupProps {
   msg: string;
 }
 
+// TODO: add signing up/LoggingIn roading UI
 export function LoginSignupUI(props: LoginSignupProps) {
   const { onSubmit, ifLoginUI, msg } = props;
 
