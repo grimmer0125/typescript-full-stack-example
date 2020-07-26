@@ -11,7 +11,7 @@ enum LoinStatus {
 
 export const signup = createAsyncThunk(
   "user/signup",
-  async (user: { email: string; password: string }) => {
+  async (user: { username: string; email: string; password: string }) => {
     const response = await client.signup(user);
     return response;
   }
@@ -19,7 +19,7 @@ export const signup = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "user/login",
-  async (user: { email: string; password: string }) => {
+  async (user: { username: string; password: string }) => {
     const response = await client.login(user);
     console.log("login resp:", response);
     return response;

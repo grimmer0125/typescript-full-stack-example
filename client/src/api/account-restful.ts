@@ -1,14 +1,13 @@
 import { SHA256 } from "crypto-js";
 
-export interface SingupArg {
-  email: string;
-  password: string;
-}
-
 // TODO: add optional environment setting for production
 const restURL = "http://localhost:3001";
 
-export async function signup(singUpArg: SingupArg): Promise<void> {
+export async function signup(singUpArg: {
+  username: string;
+  email: string;
+  password: string;
+}): Promise<void> {
   console.log("signup");
 
   const hashPassword = SHA256(singUpArg.password).toString();
@@ -29,10 +28,10 @@ export async function signup(singUpArg: SingupArg): Promise<void> {
   return json;
 }
 
-export interface LoginArg {
-  password: string;
-  email: string;
-}
+// export interface LoginArg {
+//   password: string;
+//   email: string;
+// }
 
 export interface LoginReturnObj {
   tokens: {
@@ -40,7 +39,10 @@ export interface LoginReturnObj {
   };
 }
 
-async function login(loginArg: LoginArg): Promise<LoginReturnObj> {
+async function login(loginArg: {
+  username: string;
+  password: string;
+}): Promise<LoginReturnObj> {
   console.log("login");
 
   const hashPassword = SHA256(loginArg.password).toString();
@@ -54,7 +56,7 @@ async function login(loginArg: LoginArg): Promise<LoginReturnObj> {
 
     body: JSON.stringify({
       password: hashPassword,
-      username: loginArg.email,
+      username: loginArg.username,
     }),
   });
 

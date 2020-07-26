@@ -11,9 +11,9 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
+  // TODO: figure data & resultAction's typing later
   const onSubmit = async (data: any) => {
     console.log("submit:", data);
-    // TODO: figure its typing later
     const resultAction = (await dispatch(signup(data))) as any;
     console.log("after submit:", resultAction);
     if (resultAction?.payload?.email) {

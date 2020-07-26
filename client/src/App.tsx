@@ -13,6 +13,9 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path="/dashboard">
+            <Dashboard />
+          </Route>
           <Route path="/counter_redux">
             <Counter />
           </Route>
@@ -42,6 +45,10 @@ export default function App() {
 
 function Home() {
   return <h2>Home</h2>;
+}
+
+function Dashboard() {
+  return <h2>Dashboard</h2>;
 }
 
 function About() {

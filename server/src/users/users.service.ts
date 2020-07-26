@@ -33,17 +33,17 @@ export class UsersService {
   }
 
   async create(createUserDto: User): Promise<User> {
-    const user = new User();
+    // const user = new User();
     // user.firstName = createUserDto.firstName;
     // user.lastName = createUserDto.lastName;
-    user.email = createUserDto.email;
-    user.password = createUserDto.password;
+    // user.email = createUserDto.email;
+    // user.password = createUserDto.password;
 
-    return this.usersRepository.save(user);
+    return this.usersRepository.save(createUserDto);
   }
 
-  async findOne(email: string): Promise<User> {
-    return this.usersRepository.findOne({ email });
+  async findOne(username: string): Promise<User> {
+    return this.usersRepository.findOne({ username });
   }
   // async findOne(username: string): Promise<User | undefined> {
   //   return this.users.find(user => user.username === username);
