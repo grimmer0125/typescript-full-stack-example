@@ -28,15 +28,15 @@ export async function signup(singUpArg: {
   return json;
 }
 
-// export interface LoginArg {
-//   password: string;
-//   email: string;
-// }
-
 export interface LoginReturnObj {
   tokens: {
     refreshToken: string;
   };
+}
+
+async function logout() {
+  console.log("remove access_token");
+  localStorage.removeItem("access_token");
 }
 
 async function login(loginArg: {
@@ -63,9 +63,6 @@ async function login(loginArg: {
   if (response.ok) {
     const data = await response.json();
 
-    //{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTIzQGxuLmNvbSIsImlkIjoxNSwiaWF0IjoxNTk1NzAwNzgzLCJleHAiOjE2MDA4ODQ3ODN9.4aRrQE9X64lWsT1ZV2ieMhf3tlMXtMB-5P_gnwCwMw4"}
-    // const { tokens } = data;
-
     // save accessToken in localStorage
     const { access_token } = data;
     console.log("login response ok:", data);
@@ -80,4 +77,5 @@ async function login(loginArg: {
 export default {
   signup,
   login,
+  logout,
 };

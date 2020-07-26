@@ -27,6 +27,11 @@ export const login = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk("user/logout", async () => {
+  console.log("logout reducer");
+  await RestfulAccountAPI.logout();
+});
+
 // TODO: figure this apollo client's typing
 export const getProfile = createAsyncThunk(
   "user/profile",
@@ -58,6 +63,9 @@ export const userSlice = createSlice({
       //   } else {
       //     state.error = action.error
       //   }
+    });
+    builder.addCase(logout.fulfilled, (state, { payload }) => {
+      state.loginStatus = LoinStatus.Logout;
     });
   },
 });
