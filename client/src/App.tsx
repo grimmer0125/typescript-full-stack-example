@@ -7,11 +7,14 @@ import {
   InMemoryCache,
   HttpLink,
 } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 import { ApolloProvider } from "@apollo/client";
+
+import { setContext } from "@apollo/client/link/context";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { split } from "@apollo/client";
+
+import { setupApollo } from "./api/graphql-api";
 
 // import { ApolloClient } from "apollo-client";
 // import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
@@ -27,53 +30,9 @@ import Signup from "./features/account/Signup";
 import Login from "./features/account/Login";
 import Dashboard from "./features/dashboard/Dashboard";
 
-/**
- * setup apollo client
- */
-const GRAPHQL_ENDPOINT = "http://localhost:3001/graphql";
-const GRAPHQL_WS_ENDPOINT = "ws://localhost:3001/graphql";
-const wsLink = new WebSocketLink({
-  uri: GRAPHQL_WS_ENDPOINT,
-  options: {
-    reconnect: true,
-    connectionParams: {
-      authToken: localStorage.getItem("access_token"),
-    },
-  },
-});
-const httpLink = createHttpLink({
-  uri: GRAPHQL_ENDPOINT,
-  credentials: "same-origin",
-});
-const authLink = setContext((_, { headers }) => {
-  const token: string | null = localStorage.getItem("access_token");
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  };
-});
-const splitLink = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  },
-  wsLink,
-  authLink.concat(httpLink)
-);
-const cache = new InMemoryCache();
-const client = new ApolloClient({
-  link: splitLink,
-  cache,
-});
-
 export default function App() {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={setupApollo()}>
       <Router>
         <div>
           {/* A <Switch> looks through its children <Route>s and

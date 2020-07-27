@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Dispatch } from "redux";
 
-import RestfulAccountAPI from "../../api/account-restful";
-import GraphQLAPI from "../../api/graphql_api";
-export enum LoinStatus {
+import RestfulAccountAPI from "../../api/restful-auth";
+import GraphQLAPI from "../../api/graphql-api";
+export enum LoginStatus {
   Logout,
   LoggingIn,
   LoggedIn,
@@ -33,44 +33,42 @@ export const logout = createAsyncThunk("user/logout", async () => {
 });
 
 // TODO: figure this apollo client's typing
-export const getProfile = createAsyncThunk(
-  "user/profile",
-  async (client: any) => {
-    const response = await GraphQLAPI.getProfile(client);
-    console.log("profile resp:", response);
-    return response;
-  }
-);
+export const getProfile = createAsyncThunk("user/profile", async () => {
+  const response = await GraphQLAPI.getProfile();
+  console.log("profile resp:", response);
+  return response;
+});
 
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    loginStatus: LoinStatus.Logout, //false,
+    loginStatus: LoginStatus.Logout, //false,
     email: "",
   },
   reducers: {},
   extraReducers: (builder) => {
+    /** add getProfile later */
     /**
      * Add signup.fulfilled/pending/rejected later
      */
     builder.addCase(login.fulfilled, (state, { payload }) => {
       if (payload.access_token) {
-        state.loginStatus = LoinStatus.LoggedIn;
+        state.loginStatus = LoginStatus.LoggedIn;
       } else {
-        state.loginStatus = LoinStatus.LoginFail;
+        state.loginStatus = LoginStatus.LoginFail;
       }
     });
     builder.addCase(login.pending, (state, { payload }) => {
-      state.loginStatus = LoinStatus.LoggingIn;
+      state.loginStatus = LoginStatus.LoggingIn;
     });
     builder.addCase(login.rejected, (state, { payload }) => {
       /**
        * in the future, if payload is designed has some errorMessage, we can use it
        */
-      state.loginStatus = LoinStatus.LoginFail;
+      state.loginStatus = LoginStatus.LoginFail;
     });
     builder.addCase(logout.fulfilled, (state, { payload }) => {
-      state.loginStatus = LoinStatus.Logout;
+      state.loginStatus = LoginStatus.Logout;
     });
   },
 });

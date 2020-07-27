@@ -1,0 +1,110 @@
+import gql from "graphql-tag";
+import { DocumentNode } from "graphql";
+
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { split } from "@apollo/client";
+
+export let client: ApolloClient<NormalizedCacheObject>;
+
+export function setupApollo() {
+  const GRAPHQL_ENDPOINT = "http://localhost:3001/graphql";
+  const GRAPHQL_WS_ENDPOINT = "ws://localhost:3001/graphql";
+  const wsLink = new WebSocketLink({
+    uri: GRAPHQL_WS_ENDPOINT,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        authToken: localStorage.getItem("access_token"),
+      },
+    },
+  });
+  const httpLink = createHttpLink({
+    uri: GRAPHQL_ENDPOINT,
+    credentials: "same-origin",
+  });
+  const authLink = setContext((_, { headers }) => {
+    const token: string | null = localStorage.getItem("access_token");
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      },
+    };
+  });
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+    wsLink,
+    authLink.concat(httpLink)
+  );
+  const cache = new InMemoryCache();
+  client = new ApolloClient({
+    link: splitLink,
+    cache,
+  });
+
+  return client;
+}
+
+export const GET_PROFILE = gql`
+  query whoami {
+    whoAmI {
+      id
+      email
+      username
+    }
+  }
+`;
+// query parameter perPage, page
+export const FETCH_RESTAURANTS = gql`
+  query fetchRestaurants($perPage: Int!, $page: Int!) {
+    fetchRestaurants(perPage: $perPage, page: $page) {
+      total
+      # page
+      restaurants {
+        id
+        name
+        openTimes {
+          weekDay
+          openHour
+          closeHour
+        }
+      }
+    }
+  }
+`;
+
+export async function query(cmd: DocumentNode, variables: any) {
+  const result = await client.query({
+    query: cmd,
+    variables,
+  });
+  return result;
+}
+
+// TODO: use above query instead
+export async function getProfile() {
+  const result = await client.query({
+    query: GET_PROFILE,
+  });
+  return result;
+}
+
+export default {
+  setupApollo,
+  getProfile,
+  query,
+};

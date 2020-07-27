@@ -4,14 +4,14 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 import styles from "./Account.module.css";
-import { LoinStatus } from "./accountSlice";
+import { LoginStatus } from "./accountSlice";
 
 // TODO: add typing on onSubmit
 export interface LoginSignupProps {
   ifLoginUI: Boolean;
   onSubmit?: any;
   msg?: string;
-  loginStatus?: LoinStatus;
+  loginStatus?: LoginStatus;
 }
 
 // TODO: add signing up/LoggingIn roading UI
@@ -21,7 +21,7 @@ export function LoginSignupUI(props: LoginSignupProps) {
   let combineMsg = "";
   if (msg) {
     combineMsg = msg;
-  } else if (loginStatus === LoinStatus.LoggingIn) {
+  } else if (loginStatus === LoginStatus.LoggingIn) {
     combineMsg = "LoggingIn...";
   }
 

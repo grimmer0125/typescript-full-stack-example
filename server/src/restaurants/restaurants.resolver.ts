@@ -1,12 +1,9 @@
-// import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver, Int } from '@nestjs/graphql';
+import axios from 'axios';
 
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-// import { User } from './models/user.model';
-// import { UseGuards } from '@nestjs/common';
-// import { GqlAuthGuard, CurrentUser } from '../auth/gql-jwt-auth.guard';
 import { RestaurantsService } from './restaurants.service';
 import { Restaurant } from './models/restaurant.model';
-import axios from 'axios';
+import { RestaurantData } from './models/restaurantdata.model';
 
 @Resolver()
 export class RestaurantsResolver {
@@ -15,6 +12,15 @@ export class RestaurantsResolver {
   @Query(returns => String)
   async hello() {
     return 'world';
+  }
+
+  @Query(returns => RestaurantData)
+  async fetchRestaurants(
+    @Args('perPage', { type: () => Int }) perPage?: number,
+    @Args('page', { type: () => Int }) page?: number,
+  ) {
+    const data = await this.restaurantsService.findRestaurants(perPage, page);
+    return data;
   }
 
   @Mutation(returns => String)

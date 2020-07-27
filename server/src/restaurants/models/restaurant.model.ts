@@ -32,6 +32,7 @@ export class Restaurant {
     type => OpenTime,
     openTime => openTime.restaurant,
   )
+  @Field(type => [OpenTime])
   openTimes: OpenTime[];
 
   @CreateDateColumn({ type: 'date' })

@@ -64,6 +64,26 @@ export class RestaurantsService {
     private openTimesRepository: Repository<OpenTime>,
   ) {}
 
+  async findRestaurants(perPage: number, page: number) {
+    /**
+     * TODO: check if counting implementation speed
+     */
+    const data = await this.restaurantsRepository.findAndCount({
+      order: {
+        id: 'ASC',
+      },
+      skip: (page - 1) * perPage,
+      take: perPage,
+      relations: ['openTimes'],
+    });
+
+    const [restaurants, total] = data;
+    return {
+      total,
+      restaurants,
+    };
+  }
+
   //** TODO: speed up the performance instead of write one by one*/
   async batchUpsert(data: string): Promise<Restaurant[]> {
     console.log('batchUpsert start');
