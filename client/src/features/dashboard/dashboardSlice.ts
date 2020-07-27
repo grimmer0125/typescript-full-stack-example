@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface Restaurant {
   id: number;
@@ -16,7 +16,12 @@ export const dashboardSlice = createSlice({
     restaurants: [],
   },
   reducers: {},
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase("user/logout/fulfilled", (state, _) => {
+      // TODO: add some code if need
+      console.log("handle logout in dashboard reducer");
+    });
+  },
 });
 
 export default dashboardSlice.reducer;

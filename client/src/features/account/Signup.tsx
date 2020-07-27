@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { unwrapResult } from "@reduxjs/toolkit";
 import { signup } from "./accountSlice";
 
 import { LoginSignupUI } from "./LoginSignupUI";
 
-export default function Login() {
+/**
+ * TODO: add signing up loading ui, like what we do in Login.tsx
+ */
+export default function SignupUI() {
   const [msg, setMsg] = useState("");
 
   const dispatch = useDispatch();
 
   // TODO: figure data & resultAction's typing later
   const onSubmit = async (data: any) => {
-    console.log("submit:", data);
+    console.log("signup submit:", data);
     const resultAction = (await dispatch(signup(data))) as any;
-    console.log("after submit:", resultAction);
+    console.log("after signup submit:", resultAction);
     if (resultAction?.payload?.email) {
-      setMsg("sign in successfully");
+      setMsg("sign up successfully");
     }
   };
 

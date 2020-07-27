@@ -4,20 +4,29 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 import styles from "./Account.module.css";
+import { LoinStatus } from "./accountSlice";
 
 // TODO: add typing on onSubmit
 export interface LoginSignupProps {
   ifLoginUI: Boolean;
-  onSubmit: any;
-  msg: string;
+  onSubmit?: any;
+  msg?: string;
+  loginStatus?: LoinStatus;
 }
 
 // TODO: add signing up/LoggingIn roading UI
 export function LoginSignupUI(props: LoginSignupProps) {
-  const { onSubmit, ifLoginUI, msg } = props;
+  const { onSubmit, ifLoginUI, msg, loginStatus } = props;
+  console.log("loginStatus:", loginStatus);
+  let combineMsg = "";
+  if (msg) {
+    combineMsg = msg;
+  } else if (loginStatus === LoinStatus.LoggingIn) {
+    combineMsg = "LoggingIn...";
+  }
 
   const { register, handleSubmit, watch, errors } = useForm();
-  console.log("errors:", errors);
+  // console.log("errors:", errors);
 
   console.log(watch("example")); // watch input value by passing the name of it
 
@@ -72,7 +81,7 @@ export function LoginSignupUI(props: LoginSignupProps) {
           ref={register({ required: "Enter your password" })}
         />
       </div>
-      <div style={{ height: 50 }}>{errMsg !== "" ? errMsg : msg}</div>
+      <div style={{ height: 50 }}>{errMsg !== "" ? errMsg : combineMsg}</div>
       <div
         style={{
           display: "flex",

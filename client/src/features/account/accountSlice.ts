@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 
 import RestfulAccountAPI from "../../api/account-restful";
 import GraphQLAPI from "../../api/graphql_api";
-enum LoinStatus {
+export enum LoinStatus {
   Logout,
   LoggingIn,
   LoggedIn,
@@ -50,19 +50,24 @@ export const userSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(signup.fulfilled, (state, { payload }) => {
-      state.loginStatus = LoinStatus.LoggedIn;
+    /**
+     * Add signup.fulfilled/pending/rejected later
+     */
+    builder.addCase(login.fulfilled, (state, { payload }) => {
+      if (payload.access_token) {
+        state.loginStatus = LoinStatus.LoggedIn;
+      } else {
+        state.loginStatus = LoinStatus.LoginFail;
+      }
     });
-    builder.addCase(signup.pending, (state, { payload }) => {
+    builder.addCase(login.pending, (state, { payload }) => {
       state.loginStatus = LoinStatus.LoggingIn;
     });
-    builder.addCase(signup.rejected, (state, { payload }) => {
+    builder.addCase(login.rejected, (state, { payload }) => {
+      /**
+       * in the future, if payload is designed has some errorMessage, we can use it
+       */
       state.loginStatus = LoinStatus.LoginFail;
-      //   if (action.payload) {
-      //     state.error = action.payload.errorMessage
-      //   } else {
-      //     state.error = action.error
-      //   }
     });
     builder.addCase(logout.fulfilled, (state, { payload }) => {
       state.loginStatus = LoinStatus.Logout;

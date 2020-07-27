@@ -29,9 +29,7 @@ export async function signup(singUpArg: {
 }
 
 export interface LoginReturnObj {
-  tokens: {
-    refreshToken: string;
-  };
+  access_token?: string;
 }
 
 async function logout() {
