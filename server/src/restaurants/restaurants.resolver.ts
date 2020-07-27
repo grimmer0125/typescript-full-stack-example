@@ -19,6 +19,7 @@ export class RestaurantsResolver {
     @Args('perPage', { type: () => Int }) perPage?: number,
     @Args('page', { type: () => Int }) page?: number,
   ) {
+    console.log('get fetchRestaurants ');
     const data = await this.restaurantsService.findRestaurants(perPage, page);
     return data;
   }
