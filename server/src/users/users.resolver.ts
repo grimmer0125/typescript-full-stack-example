@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
-  @Query(returns => User)
+  @Query(returns => User, { description: 'use this to get personal profile' })
   @UseGuards(GqlAuthGuard)
   async whoAmI(@CurrentUser() createUserDto: User) {
     const user = await this.usersService.findOne(createUserDto.username);
