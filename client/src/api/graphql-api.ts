@@ -70,8 +70,20 @@ export const GET_PROFILE = gql`
 `;
 // query parameter perPage, page
 export const FETCH_RESTAURANTS = gql`
-  query fetchRestaurants($perPage: Int!, $page: Int!) {
-    fetchRestaurants(perPage: $perPage, page: $page) {
+  query fetchRestaurants(
+    $perPage: Int!
+    $page: Int!
+    $filterWeekDay: Int!
+    $filterTime: String!
+    $filterRestaurentName: String!
+  ) {
+    fetchRestaurants(
+      perPage: $perPage
+      page: $page
+      filterWeekDay: $filterWeekDay
+      filterTime: $filterTime
+      filterRestaurentName: $filterRestaurentName
+    ) {
       total
       # page
       restaurants {

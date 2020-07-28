@@ -34,36 +34,64 @@ const restaurantsAdapter = createEntityAdapter<Restaurant>({
   sortComparer: (a, b) => a.id - b.id,
 });
 
+const INITIAL_PAGE = 1;
 const initialState = restaurantsAdapter.getInitialState({
   status: Loading.Idle,
   error: null,
-  perPage: 15,
-  page: 1,
+  perPage: 14,
+  page: INITIAL_PAGE,
   total: 0,
 });
 
 export const fetchRestaurants = createAsyncThunk(
   "dashboard/fetchRestaurants",
-  async (newPage: number, { getState, dispatch }) => {
+  async (
+    args: {
+      newPage: number;
+      issueFilter?: boolean;
+      filterWeekDay?: number;
+      filterTime?: string;
+      filterRestaurentName?: string;
+    },
+    { getState, dispatch }
+  ) => {
+    const {
+      newPage,
+      filterWeekDay,
+      filterTime,
+      filterRestaurentName,
+      issueFilter, // reset page =1, total = NaN
+    } = args;
     const state = getState() as RootState;
-    console.log("store:", state, newPage);
+    // console.log("store:", state, newPage);
     const {
       restaurants: { perPage, page, status, total },
     } = state;
     let response: ApolloQueryResult<any>;
-    if (status === Loading.Idle) {
+    const { switchPage, issueFilterRequest } = restaurantsSlice.actions;
+    if (status === Loading.Idle || issueFilter) {
+      if (issueFilter) {
+        dispatch(issueFilterRequest({}));
+      }
       response = await GraphQLAPI.query(FETCH_RESTAURANTS, {
         perPage,
-        page: page, // initail
+        page: INITIAL_PAGE, // initail
+        filterWeekDay: filterWeekDay ?? 0,
+        filterTime: filterTime ?? "",
+        filterRestaurentName: filterRestaurentName ?? "",
       });
     } else {
+      // newPage >=1 is not necessary but just more safe in case
       if (newPage >= 1 && perPage * (newPage - 1) < total) {
+        dispatch(switchPage({ page: newPage }));
+
         response = await GraphQLAPI.query(FETCH_RESTAURANTS, {
           perPage,
           page: newPage,
+          filterWeekDay: filterWeekDay ?? 0,
+          filterTime: filterTime ?? "",
+          filterRestaurentName: filterRestaurentName ?? "",
         });
-        const { switchPage } = restaurantsSlice.actions;
-        dispatch(switchPage({ page: newPage }));
       } else {
         console.log("already final page");
         return;
@@ -86,6 +114,11 @@ export const restaurantsSlice = createSlice({
       console.log("switchPage action:", action);
       state.page = action.payload.page;
     },
+    issueFilterRequest(state, action) {
+      console.log("issue filter in reducer");
+      state.total = Infinity;
+      state.page = 1;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase("user/logout/fulfilled", (state, _) => {
@@ -95,8 +128,22 @@ export const restaurantsSlice = createSlice({
     builder.addCase(fetchRestaurants.fulfilled, (state, { payload }) => {
       restaurantsAdapter.setAll(state, payload.restaurants);
       state.status = Loading.Succeeded;
-      state.total = payload.total;
+      console.log("check returned data:", payload);
+      console.log("page:", state.page);
+      const { restaurants } = payload;
+
+      if (payload.total) {
+        state.total = payload.total;
+      } else {
+        // filter case
+        if (restaurants.length < state.perPage) {
+          state.total = state.perPage * (state.page - 1) + restaurants.length;
+        }
+      }
     });
+    /**
+     * TODO: handle these cases
+     */
     builder.addCase(fetchRestaurants.pending, (state, _) => {});
     builder.addCase(fetchRestaurants.rejected, (state, _) => {});
   },

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Restaurant } from './models/restaurant.model';
 import { OpenTime } from './models/opentime.model';
+import { query } from 'express';
 
 enum WeekDay {
   Mon = 1,
@@ -63,6 +64,114 @@ export class RestaurantsService {
     @InjectRepository(OpenTime)
     private openTimesRepository: Repository<OpenTime>,
   ) {}
+
+  async findRestaurantsByFilterName(
+    perPage: number,
+    page: number,
+    filterRestaurentName: string,
+  ) {
+    console.log('read restaurant by filter start');
+
+    const restaurants = await this.restaurantsRepository
+      .createQueryBuilder('restaurant')
+      .leftJoinAndSelect('restaurant.openTimes', 'openTime')
+      .where('restaurant.name like :name', {
+        name: '%' + filterRestaurentName + '%',
+      })
+      .orderBy('restaurant.name') // TODO: add index on it?
+      .skip(0)
+      .take(50)
+      .getMany();
+    console.log('get restaurant');
+
+    return {
+      restaurants,
+      total: 0, // dummy
+    };
+  }
+
+  // total: 108
+  // const queryDay = 3;
+  // const queryTime = "23:30:00"
+  async findRestaurantsByFilter(
+    perPage: number,
+    page: number,
+    filterWeekDay: number,
+    filterTime: string,
+    filterRestaurentName: string,
+  ) {
+    console.log('read restaurant by filter start');
+
+    const skip = (page - 1) * perPage;
+
+    // const openTimeList = await this.openTimesRepository.query(
+    //   `SELECT DISTINCT ON ("open_time"."restaurantId") "open_time".*, "restaurant".* FROM open_time
+    //   LEFT JOIN restaurant ON "restaurant"."id" = "open_time"."restaurantId"
+    //   WHERE "open_time"."weekDay" = ${filterWeekDay}
+    //   AND "restaurant"."name" = '${filterRestaurentName}'
+    //   AND "open_time"."openHour" <= '${filterTime}' AND ('${filterTime}' < "open_time"."closeHour" OR "open_time"."openHour" >= "open_time"."closeHour")
+    //   ORDER BY "open_time"."restaurantId"
+    //   LIMIT ${perPage} OFFSET ${skip}`,
+    // );
+
+    const queryList = [];
+    if (filterRestaurentName) {
+      const restaurentSQL = ` "restaurant"."name" LIKE '%${filterRestaurentName}%' `;
+      queryList.push(restaurentSQL);
+    }
+    if (filterWeekDay) {
+      const weekDaySQL = ` "open_time"."weekDay" = ${filterWeekDay} `;
+      queryList.push(weekDaySQL);
+    }
+    if (filterTime) {
+      const timeSQL = ` "open_time"."openHour" <= '${filterTime}' AND ('${filterTime}' < "open_time"."closeHour" OR "open_time"."openHour" >= "open_time"."closeHour") `;
+      queryList.push(timeSQL);
+    }
+    let queryStr = '';
+    for (let i = 0; i < queryList.length; i++) {
+      if (i === 0) {
+        queryStr += 'WHERE ';
+      } else {
+        queryStr += 'AND ';
+      }
+      queryStr += queryList[i];
+    }
+
+    console.log('queryStr:', queryStr);
+
+    const openTimeList = await this.openTimesRepository.query(
+      `SELECT DISTINCT ON ("open_time"."restaurantId") "open_time".*, "restaurant".* FROM open_time 
+        LEFT JOIN restaurant ON "restaurant"."id" = "open_time"."restaurantId"
+        ${queryStr}
+        ORDER BY "open_time"."restaurantId"
+        LIMIT ${perPage} OFFSET ${skip}`,
+    );
+
+    if (openTimeList.length === 0) {
+      return {
+        restaurants: [],
+        total: 0,
+      };
+    }
+
+    /**
+     * prevent n-query issue
+     */
+    const ids = openTimeList.map(openTime => {
+      return openTime.restaurantId;
+    });
+    const restaurants = await this.restaurantsRepository.find({
+      where: {
+        id: In(ids),
+      },
+      relations: ['openTimes'],
+    });
+
+    return {
+      restaurants,
+      total: 0, // dummy
+    };
+  }
 
   async findRestaurants(perPage: number, page: number) {
     /**

@@ -18,8 +18,22 @@ export class RestaurantsResolver {
   async fetchRestaurants(
     @Args('perPage', { type: () => Int }) perPage?: number,
     @Args('page', { type: () => Int }) page?: number,
+    @Args('filterWeekDay', { type: () => Int }) filterWeekDay?: number,
+    @Args('filterTime') filterTime?: string,
+    @Args('filterRestaurentName') filterRestaurentName?: string,
   ) {
     console.log('get fetchRestaurants ');
+    if (filterWeekDay || filterTime || filterRestaurentName) {
+      const data = await this.restaurantsService.findRestaurantsByFilter(
+        perPage,
+        page,
+        filterWeekDay,
+        filterTime,
+        filterRestaurentName,
+      );
+
+      return data;
+    }
     const data = await this.restaurantsService.findRestaurants(perPage, page);
     return data;
   }
