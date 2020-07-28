@@ -101,7 +101,10 @@ export class RestaurantsService {
       const restaurantName = fieldData[0].substring(1);
       if (restaurantDict[restaurantName]) {
         // TODO: delete old and use new, currently just skip new one
-        // e.g. "Parallel 37", "Smyth", 'Rafain Brazilian Steakhouse'
+        // e.g.
+        // 'Parallel 37',
+        // 'Smyth',
+        // 'Rafain Brazilian Steakhouse'
         // 'Bones'
         // 'Blue Plate'
         // 'Lena'
@@ -135,13 +138,10 @@ export class RestaurantsService {
         );
       }
 
+      const sortingOpenTimeList: OpenTime[] = [];
       for (let index = 0; index < weekDayTimeList.length; index++) {
         // may have space tail, e.g. e.g. 9 pm '
         const weekDayTimeStr = weekDayTimeList[index].trim();
-        console.log('index:', index, weekDayTimeStr);
-        if (index !== 0 && index !== weekDayTimeList.length - 1) {
-          continue;
-        }
 
         const firstDigit = weekDayTimeStr.search(/\d/);
         const weekDayStr = weekDayTimeStr.substring(0, firstDigit - 1);
@@ -202,9 +202,16 @@ export class RestaurantsService {
           timeObj.closeHour = closeHour;
           timeObj.weekDay = weekDay;
           timeObj.restaurant = restaurantObj;
-          // NOTE: change to batch save?
-          await this.openTimesRepository.save(timeObj);
+          sortingOpenTimeList.push(timeObj);
         }
+      }
+
+      sortingOpenTimeList.sort((a, b) => {
+        return a.weekDay - b.weekDay;
+      });
+      for (const timeObj of sortingOpenTimeList) {
+        // NOTE: change to batch save?
+        await this.openTimesRepository.save(timeObj);
       }
     }
 
