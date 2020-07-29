@@ -34,6 +34,28 @@ export class RestaurantCollectionsService {
     // user -> collection -> restaurant
 
     /**
+     * find the restaurant
+     */
+    const restaurant = await this.restaurantsRepository.findOne({
+      where: {
+        name: restaurantName,
+      },
+      relations: ['collections'],
+    });
+    if (!restaurant) {
+      throw new Error('no restaurant');
+    }
+    if (
+      restaurant.collections.findIndex(collection => {
+        if (collection.name === restaurantCollectionName) {
+          return true;
+        }
+      }) > -1
+    ) {
+      throw new Error("already in this user's collection");
+    }
+
+    /**
      * find the user
      */
     const user2 = await this.usersRepository.findOne({ id: user.id });
@@ -51,15 +73,6 @@ export class RestaurantCollectionsService {
       relations: ['owners'],
     });
     if (collection) {
-      if (
-        collection.owners.findIndex(owner => {
-          if (owner.username === user2.username) {
-            return true;
-          }
-        }) > -1
-      ) {
-        throw new Error("already in this user's collection");
-      }
       collection.owners.push(user2);
       await this.restaurantCollectionssRepository.save(collection);
     } else {
@@ -68,19 +81,12 @@ export class RestaurantCollectionsService {
       collection.owners = [user2];
       await this.restaurantCollectionssRepository.save(collection);
     }
+
     /**
      * udpate restaurant's collections
      */
-    const restaurant = await this.restaurantsRepository.findOne({
-      where: {
-        name: restaurantName,
-      },
-      relations: ['collections'],
-    });
-    if (restaurant) {
-      restaurant.collections.push(collection);
-      await this.restaurantsRepository.save(restaurant);
-    }
+    restaurant.collections.push(collection);
+    await this.restaurantsRepository.save(restaurant);
 
     return collection;
   }
