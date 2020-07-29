@@ -344,8 +344,6 @@ export default function Dashboard() {
       if (!errorMsg) {
         timeFilterOK = true;
       }
-    } else {
-      errorMsg = "not enough weekDay&time";
     }
 
     if (timeFilterOK || restaurantFilterOK || weekDayFilterOK) {
