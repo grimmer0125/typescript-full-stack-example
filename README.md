@@ -19,6 +19,7 @@ Open http://localhost:3000 to play this example.
 
 - TypeScript
 - React
+- CRA (Create React App)
 - Redux Hooks
 - @reduxjs/toolkit
 - PostgreSQL
