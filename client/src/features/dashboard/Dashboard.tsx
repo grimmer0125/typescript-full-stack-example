@@ -97,13 +97,18 @@ export default function Dashboard() {
         <div
           key={restaurantID}
           style={{
-            backgroundColor: "grey",
+            borderStyle: "solid",
+            borderWidth: "2px",
+            borderColor: "#7FC8FF",
             margin: "10px 10px",
             display: "flex",
           }}
         >
-          <div>{restaurant?.name}</div>
-          <div>{openTimes && convertOpenTimesToStr(openTimes)}</div>
+          <div style={{ margin: "5px" }}>{restaurantID}</div>
+          <div style={{ margin: "5px", width: 250 }}>{restaurant?.name}</div>
+          <div style={{ margin: "5px" }}>
+            {openTimes && convertOpenTimesToStr(openTimes)}
+          </div>
         </div>
       );
     });
@@ -217,7 +222,6 @@ export default function Dashboard() {
   return (
     <div
       style={{
-        backgroundColor: "yellow",
         width: "100vw",
         height: "100vh",
         display: "flex",
@@ -238,15 +242,15 @@ export default function Dashboard() {
       <div
         style={{
           flex: 1,
-          background: "red",
+          background: "#33FFDD",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          maxHeight: "100%",
+          overflow: "auto",
         }}
       >
-        <div style={{ backgroundColor: "purple", display: "flex" }}>
+        <div style={{ display: "flex" }}>
           <div>
             WeekDayTime:
             <select value={weekDay} onChange={handleWeekDayChange}>
@@ -274,7 +278,7 @@ export default function Dashboard() {
             {msg}
           </div>
         </div>
-        <div style={{ width: 800, height: 750, background: "white" }}>
+        <div style={{ width: 800, background: "white", overflow: "auto" }}>
           {content}
         </div>
         <div>
