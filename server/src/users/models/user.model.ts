@@ -1,5 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import {
+  Index,
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+} from 'typeorm';
 
 import { FoodCollection } from '../../restaurants/models/foodcollection.model';
 
@@ -15,6 +21,7 @@ export class User {
   email: string;
 
   @Field()
+  @Index()
   @Column()
   username?: string;
 

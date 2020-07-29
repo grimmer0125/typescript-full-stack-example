@@ -19,6 +19,12 @@ export class UsersService {
     // user.firstName = createUserDto.firstName;
     // user.lastName = createUserDto.lastName;
     // user.email = createUserDto.email;
+    const storedUser = await this.usersRepository.findOne({
+      username: user.username,
+    });
+    if (storedUser) {
+      throw new Error('existing user');
+    }
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(user.password, salt);
 

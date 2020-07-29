@@ -23,11 +23,13 @@ enum WeekDay {
 }
 
 function convertOpenTimesToStr(openTimes: OpenTime[]) {
-  return openTimes.map((openTime) => {
+  let totalStr = "";
+  openTimes.forEach((openTime) => {
     const { weekDay, openHour, closeHour } = openTime;
     const weekDayStr = WeekDay[weekDay];
-    return <>{`${weekDayStr} ${openHour}-${closeHour};`}</>;
+    totalStr += `${weekDayStr} ${openHour}-${closeHour};`;
   });
+  return totalStr;
 }
 
 export default function Dashboard() {
@@ -102,6 +104,7 @@ export default function Dashboard() {
             borderColor: "#7FC8FF",
             margin: "10px 10px",
             display: "flex",
+            height: "65 px",
           }}
         >
           <div style={{ margin: "5px" }}>{restaurantID}</div>
@@ -190,14 +193,16 @@ export default function Dashboard() {
           errorMsg = "not valid second";
         }
       }
-      timeFilterOK = true;
+      if (!errorMsg) {
+        timeFilterOK = true;
+      }
     } else {
       errorMsg = "not enough weekDay&time";
     }
 
     if (timeFilterOK || restaurantFilterOK || weekDayFilterOK) {
       if (errorMsg) {
-        errorMsg += "other ok, submitted";
+        errorMsg += ", submitted others";
       }
 
       await dispatch(
@@ -260,12 +265,14 @@ export default function Dashboard() {
               <option value={WeekDay.Sun}>Sun</option>
             </select>
             <input
+              style={{ width: 75 }}
               onChange={handleTimeChange}
               value={timeText}
               placeholder="e.g. 11:11:11"
             />
             Restaurent Name:
             <input
+              style={{ width: 110 }}
               onChange={handleRestaurantNameChange}
               value={restaurantFilterName}
               placeholder="e.g. apple store"

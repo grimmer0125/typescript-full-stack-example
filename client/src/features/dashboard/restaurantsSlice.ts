@@ -38,7 +38,7 @@ const INITIAL_PAGE = 1;
 const initialState = restaurantsAdapter.getInitialState({
   status: Loading.Idle,
   error: null,
-  perPage: 14,
+  perPage: 10,
   page: INITIAL_PAGE,
   total: 0,
 });
