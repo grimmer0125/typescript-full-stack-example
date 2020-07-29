@@ -132,6 +132,7 @@ export async function query(cmd: DocumentNode, variables: any) {
   const result = await client.query({
     query: cmd,
     variables,
+    fetchPolicy: "network-only",
   });
   return result;
 }
