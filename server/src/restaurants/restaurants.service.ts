@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Restaurant } from './models/restaurant.model';
 import { OpenTime } from './models/opentime.model';
-import { query } from 'express';
 
 enum WeekDay {
   Mon = 1,
@@ -65,6 +64,7 @@ export class RestaurantsService {
     private openTimesRepository: Repository<OpenTime>,
   ) {}
 
+  // deprecated
   async findRestaurantsByFilterName(
     perPage: number,
     page: number,
@@ -90,9 +90,10 @@ export class RestaurantsService {
     };
   }
 
+  // example:
   // total: 108
-  // const queryDay = 3;
-  // const queryTime = "23:30:00"
+  // const filterWeekDay = 3;
+  // const filterTime = "23:30:00"
   async findRestaurantsByFilter(
     perPage: number,
     page: number,
@@ -104,19 +105,9 @@ export class RestaurantsService {
 
     const skip = (page - 1) * perPage;
 
-    // const openTimeList = await this.openTimesRepository.query(
-    //   `SELECT DISTINCT ON ("open_time"."restaurantId") "open_time".*, "restaurant".* FROM open_time
-    //   LEFT JOIN restaurant ON "restaurant"."id" = "open_time"."restaurantId"
-    //   WHERE "open_time"."weekDay" = ${filterWeekDay}
-    //   AND "restaurant"."name" = '${filterRestaurentName}'
-    //   AND "open_time"."openHour" <= '${filterTime}' AND ('${filterTime}' < "open_time"."closeHour" OR "open_time"."openHour" >= "open_time"."closeHour")
-    //   ORDER BY "open_time"."restaurantId"
-    //   LIMIT ${perPage} OFFSET ${skip}`,
-    // );
-
     const queryList = [];
     if (filterRestaurentName) {
-      const restaurentSQL = ` "restaurant"."name" LIKE '%${filterRestaurentName}%' `;
+      const restaurentSQL = ` "restaurant"."name" ILIKE '%${filterRestaurentName}%' `;
       queryList.push(restaurentSQL);
     }
     if (filterWeekDay) {
