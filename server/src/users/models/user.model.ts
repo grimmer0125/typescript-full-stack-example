@@ -1,5 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+
+import { FoodCollection } from '../../restaurants/models/foodcollection.model';
 
 @ObjectType()
 @Entity()
@@ -19,4 +21,10 @@ export class User {
   @Field()
   @Column()
   password: string;
+
+  @ManyToMany(
+    type => FoodCollection,
+    foodCollection => foodCollection.owners,
+  )
+  foodCollections: FoodCollection[];
 }

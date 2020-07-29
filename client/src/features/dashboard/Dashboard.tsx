@@ -151,10 +151,6 @@ export default function Dashboard() {
     setTimeText(event.target.value);
   };
 
-  //   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log("time:", event);
-  //   setTimeText(event.target.value);
-  // };
   const handleRestaurantNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {

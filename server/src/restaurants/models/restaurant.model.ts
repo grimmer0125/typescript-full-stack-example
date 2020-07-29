@@ -5,9 +5,13 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 import { OpenTime } from './opentime.model';
+
+import { FoodCollection } from './foodcollection.model';
 
 @ObjectType()
 @Entity()
@@ -15,14 +19,6 @@ export class Restaurant {
   @Field(type => Int)
   @PrimaryGeneratedColumn()
   id?: number;
-
-  // @Field({ nullable: true })
-  // @Column()
-  // firstName?: string;
-
-  // @Field({ nullable: true })
-  // @Column()
-  // lastName?: string;
 
   @Field()
   @Column()
@@ -37,4 +33,11 @@ export class Restaurant {
 
   @CreateDateColumn({ type: 'date' })
   created: Date;
+
+  @ManyToMany(
+    type => FoodCollection,
+    foodCollection => foodCollection.restaurants,
+  )
+  @JoinTable()
+  foodCollections: FoodCollection[];
 }
