@@ -68,6 +68,35 @@ export const GET_PROFILE = gql`
     }
   }
 `;
+
+/** assume one people can not have two same name collection */
+export const ADD_RESTAURANT_TO_COLLECTION = gql`
+  mutation addRestaurantToCollection(
+    $restaurantName: String!
+    $restaurantCollectionName: String!
+  ) {
+    addRestaurantToCollection(
+      restaurantName: $restaurantName
+      restaurantCollectionName: $restaurantCollectionName
+    ) {
+      id
+      name
+    }
+  }
+`;
+
+export const FETCH_RESTAURANT_COLLECTION_LIST = gql`
+  query fetchRestaurantCollectionList {
+    fetchRestaurantCollectionList {
+      total
+      restaurantCollections {
+        id
+        name
+      }
+    }
+  }
+`;
+
 // query parameter perPage, page
 export const FETCH_RESTAURANTS = gql`
   query fetchRestaurants(
@@ -106,6 +135,13 @@ export async function query(cmd: DocumentNode, variables: any) {
   });
   return result;
 }
+export async function mutation(cmd: DocumentNode, variables: any) {
+  const result = await client.mutate({
+    mutation: cmd,
+    variables,
+  });
+  return result;
+}
 
 // TODO: use above query instead
 export async function getProfile() {
@@ -119,4 +155,5 @@ export default {
   setupApollo,
   getProfile,
   query,
+  mutation,
 };

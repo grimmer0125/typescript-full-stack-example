@@ -7,7 +7,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 
-import { FoodCollection } from '../../restaurants/models/foodcollection.model';
+import { RestaurantCollection } from '../../restaurants/models/restaurantcollection.model';
 
 @ObjectType()
 @Entity()
@@ -30,8 +30,8 @@ export class User {
   password: string;
 
   @ManyToMany(
-    type => FoodCollection,
-    foodCollection => foodCollection.owners,
+    type => RestaurantCollection,
+    restaurantCollection => restaurantCollection.owners,
   )
-  foodCollections: FoodCollection[];
+  restaurantCollections: RestaurantCollection[];
 }

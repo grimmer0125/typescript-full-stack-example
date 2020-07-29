@@ -15,7 +15,7 @@ import { Restaurant } from './restaurant.model';
 
 @ObjectType()
 @Entity()
-export class FoodCollection {
+export class RestaurantCollection {
   @Field(type => Int)
   @PrimaryGeneratedColumn()
   id?: number;
@@ -26,13 +26,13 @@ export class FoodCollection {
 
   @ManyToMany(
     type => Restaurant,
-    restaurant => restaurant.foodCollections,
+    restaurant => restaurant.collections,
   )
   restaurants: Restaurant[];
 
   @ManyToMany(
     type => User,
-    owner => owner.foodCollections,
+    owner => owner.restaurantCollections,
   )
   @JoinTable()
   owners: User[];

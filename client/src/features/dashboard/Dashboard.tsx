@@ -3,9 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
+import Popup from "reactjs-popup";
 
 import { getProfile, logout } from "../account/accountSlice";
-import { fetchRestaurants } from "./restaurantsSlice";
+import { fetchRestaurants, Restaurant } from "./restaurantsSlice";
+import {
+  addRestaurantToCollection,
+  fetchRestaurantCollections,
+} from "./restaurantsCollectionsSlice";
 import { RootState } from "../../app/store";
 import { Loading, OpenTime } from "./restaurantsSlice";
 
@@ -32,6 +37,149 @@ function convertOpenTimesToStr(openTimes: OpenTime[]) {
   return totalStr;
 }
 
+interface RestaurantBlockProps {
+  restaurant: Restaurant;
+  onRestaurantClick?: any;
+  unselectRestaurant?: any;
+  open?: boolean;
+}
+
+function RestaurantBlock(props: RestaurantBlockProps) {
+  const { restaurant } = props;
+  const [open, setOpen] = useState(false);
+  const [selectedCollectionName, setSelectedCollectionName] = useState("");
+
+  const dispatch = useDispatch();
+  const restaurantCollections = useSelector(
+    (state: RootState) => state.restaurantCollections
+  );
+
+  const { ids, entities } = restaurantCollections;
+
+  useEffect(() => {
+    async function fetchData() {
+      console.log("fetch fetchRestaurantCollections");
+      const resultAction = (await dispatch(
+        fetchRestaurantCollections({})
+      )) as any;
+    }
+    if (open === true) {
+      fetchData();
+    }
+  }, [dispatch, open, setOpen]);
+
+  const onOepn = (open: boolean) => {
+    // workaround solution, otherwise will get warning
+    setTimeout(() => {
+      setOpen(open);
+    }, 1);
+  };
+  if (!restaurant) {
+    return <></>;
+  }
+
+  const onSelectCollection = (restaurantCollectionID: number) => {
+    console.log("select");
+    const restaurantCollection = entities[restaurantCollectionID];
+    if (restaurantCollection) {
+      setSelectedCollectionName(restaurantCollection.name);
+    }
+  };
+
+  const handleRestaurantCollectionNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedCollectionName(event.target.value);
+  };
+  const onSubmit = async () => {
+    console.log("submit to a new collection");
+
+    await dispatch(
+      addRestaurantToCollection({
+        restaurantName: restaurant.name,
+        restaurantCollectionName: selectedCollectionName,
+      })
+    );
+  };
+
+  let addRestaurantContent = null;
+  if (open) {
+    const collectionContent = ids.map((restaurantCollectionID) => {
+      const restaurantCollection = entities[restaurantCollectionID];
+      if (restaurantCollection) {
+        return (
+          <div
+            onClick={() => onSelectCollection(restaurantCollectionID as number)}
+            key={restaurantCollection.id}
+          >
+            {restaurantCollection.name}
+          </div>
+        );
+      } else {
+        return <></>;
+      }
+    });
+
+    addRestaurantContent = (
+      <div>
+        Choose a favorite list or create one to add in:
+        <input
+          style={{ width: 110 }}
+          onChange={handleRestaurantCollectionNameChange}
+          value={selectedCollectionName}
+          placeholder="e.g. fav list 1"
+        />
+        <button onClick={onSubmit}>submit</button>
+        {collectionContent}
+      </div>
+    );
+  } else {
+    addRestaurantContent = <div></div>;
+  }
+
+  const { openTimes } = restaurant;
+  return (
+    <div
+      style={{
+        borderStyle: "solid",
+        borderWidth: "2px",
+        borderColor: "#7FC8FF",
+        margin: "10px 10px",
+        display: "flex",
+        height: "65 px",
+      }}
+    >
+      <div style={{ margin: "5px" }}>{restaurant.id}</div>
+      <div style={{ margin: "5px", width: 250 }}>{restaurant?.name}</div>
+      <div style={{ margin: "5px" }}>
+        {openTimes && convertOpenTimesToStr(openTimes)}
+      </div>
+      <div>
+        <Popup
+          trigger={(open) => {
+            onOepn(open);
+            return <button>+</button>;
+          }}
+          position="right center"
+          closeOnDocumentClick
+        >
+          {addRestaurantContent}
+        </Popup>
+        {/* below works (controlled by others) but its position is not right center */}
+        {/* <button onClick={() => onRestaurantClick(restaurant.id)}>+</button>
+        <Popup
+          open={open}
+          closeOnDocumentClick
+          onClose={unselectRestaurant}
+          position="right center"
+        >
+          <span> Popup content </span>
+        </Popup> */}
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   // const { register, handleSubmit, watch, errors } = useForm();
 
@@ -42,6 +190,7 @@ export default function Dashboard() {
   const [weekDay, setWeekDay] = useState(0);
   const [msg, setMsg] = useState("");
   const [restaurantFilterName, setRestaurantFilterName] = useState("");
+  const [selectedRestaurantID, setSelectedRestaurantID] = useState(0);
 
   const restaurants = useSelector((state: RootState) => state.restaurants);
   const { total, status, perPage, error, page, ids, entities } = restaurants;
@@ -83,37 +232,36 @@ export default function Dashboard() {
     };
   }, [dispatch]);
 
+  const onRestaurantClick = (restaurantID: number) => {
+    console.log("onRestaurantClick:", restaurantID);
+    setSelectedRestaurantID(restaurantID);
+  };
+
+  const unselectRestaurant = () => {
+    console.log("unselectRestaurant");
+    setSelectedRestaurantID(0);
+  };
+
   let content;
   if (status === Loading.Pending) {
     content = <div>Loading...</div>;
   } else if (status === Loading.Succeeded) {
     // show restaurants
-    // export const selectAllPosts = state => state.posts.posts
     content = ids.map((restaurantID) => {
       const restaurant = entities[restaurantID];
-      if (!restaurant) {
+      if (restaurant) {
+        return (
+          <RestaurantBlock
+            key={restaurant.id}
+            restaurant={restaurant}
+            onRestaurantClick={onRestaurantClick}
+            unselectRestaurant={unselectRestaurant}
+            open={restaurant.id === selectedRestaurantID ? true : false}
+          />
+        );
+      } else {
         return <></>;
       }
-      const { name, openTimes } = restaurant;
-      return (
-        <div
-          key={restaurantID}
-          style={{
-            borderStyle: "solid",
-            borderWidth: "2px",
-            borderColor: "#7FC8FF",
-            margin: "10px 10px",
-            display: "flex",
-            height: "65 px",
-          }}
-        >
-          <div style={{ margin: "5px" }}>{restaurantID}</div>
-          <div style={{ margin: "5px", width: 250 }}>{restaurant?.name}</div>
-          <div style={{ margin: "5px" }}>
-            {openTimes && convertOpenTimesToStr(openTimes)}
-          </div>
-        </div>
-      );
     });
   } else if (status === Loading.Failed) {
     content = <div>{error}</div>;

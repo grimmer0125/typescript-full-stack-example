@@ -1,5 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Restaurant } from './restaurant.model';
+import { Restaurant } from './models/restaurant.model';
+
+/**
+ * This is a DTO (Data Transfer Object),
+ */
 @ObjectType()
 export class RestaurantData {
   @Field(type => Int)

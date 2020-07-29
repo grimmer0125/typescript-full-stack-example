@@ -15,7 +15,7 @@ export interface OpenTime {
   closeHour: string;
 }
 
-interface Restaurant {
+export interface Restaurant {
   id: number;
   name: string;
   openTimes?: OpenTime[];
@@ -60,7 +60,7 @@ export const fetchRestaurants = createAsyncThunk(
       filterWeekDay,
       filterTime,
       filterRestaurentName,
-      issueFilter, // reset page =1, total = NaN
+      issueFilter,
     } = args;
     const state = getState() as RootState;
     // console.log("store:", state, newPage);

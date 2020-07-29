@@ -11,7 +11,7 @@ import {
 
 import { OpenTime } from './opentime.model';
 
-import { FoodCollection } from './foodcollection.model';
+import { RestaurantCollection } from './restaurantcollection.model';
 
 @ObjectType()
 @Entity()
@@ -35,9 +35,9 @@ export class Restaurant {
   created: Date;
 
   @ManyToMany(
-    type => FoodCollection,
-    foodCollection => foodCollection.restaurants,
+    type => RestaurantCollection,
+    restaurantCollection => restaurantCollection.restaurants,
   )
   @JoinTable()
-  foodCollections: FoodCollection[];
+  collections: RestaurantCollection[];
 }
