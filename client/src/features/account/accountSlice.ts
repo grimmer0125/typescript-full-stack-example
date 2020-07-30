@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Dispatch } from "redux";
 
 import RestfulAccountAPI from "../../api/restful-auth";
 import GraphQLAPI from "../../api/graphql-api";
+import { RootState } from "../../app/store";
+import { restaurantCollectionsSlice } from "../dashboard/restaurantsCollectionsSlice";
+
 export enum LoginStatus {
   Logout,
   LoggingIn,
@@ -33,11 +35,41 @@ export const logout = createAsyncThunk("user/logout", async () => {
 });
 
 // TODO: figure this apollo client's typing
-export const getProfile = createAsyncThunk("user/profile", async () => {
-  const response = await GraphQLAPI.getProfile();
-  console.log("profile resp:", response);
-  return response;
-});
+export const getProfile = createAsyncThunk(
+  "user/profile",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.account.email) {
+      console.log("setup subscription");
+      /**
+       * setup subscription
+       */
+      GraphQLAPI.subscriptionRestaurantChange((response: any) => {
+        console.log("get RestaurantAdded to my collection:", response);
+        // const {
+        //   data: { restaurantAddedIntoCollection },
+        // } = response;
+        // const {
+        //   restaurant,
+        //   restaurantCollectionID,
+        // } = response.data.restaurantAddedIntoCollection;
+
+        const {
+          restaurantAddedIntoCollection,
+        } = restaurantCollectionsSlice.actions;
+
+        dispatch(
+          restaurantAddedIntoCollection(
+            response.data.restaurantAddedIntoCollection
+          )
+        );
+      });
+    }
+    const response = await GraphQLAPI.getProfile();
+    console.log("profile resp:", response);
+    return response;
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -47,7 +79,9 @@ export const userSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    /** add getProfile later */
+    builder.addCase(getProfile.fulfilled, (state, { payload }) => {
+      state.email = payload?.data?.whoAmI?.email ?? "";
+    });
     /**
      * Add signup.fulfilled/pending/rejected later
      */
@@ -68,7 +102,7 @@ export const userSlice = createSlice({
       state.loginStatus = LoginStatus.LoginFail;
     });
     builder.addCase(logout.fulfilled, (state, { payload }) => {
-      state.loginStatus = LoginStatus.Logout;
+      state.email = "";
     });
   },
 });

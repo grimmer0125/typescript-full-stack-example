@@ -22,7 +22,7 @@ export function setupApollo() {
     options: {
       reconnect: true,
       connectionParams: {
-        authToken: localStorage.getItem("access_token"),
+        authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     },
   });
@@ -129,6 +129,18 @@ export const FETCH_RESTAURANT_COLLECTION_LIST = gql`
   }
 `;
 
+export const RESTAURANT_ADDED_INTO_COLLECTION = gql`
+  subscription restaurantAddedIntoCollection {
+    restaurantAddedIntoCollection {
+      restaurantCollectionID
+      restaurant {
+        id
+        name
+      }
+    }
+  }
+`;
+
 // query parameter perPage, page
 export const FETCH_RESTAURANTS = gql`
   query fetchRestaurants(
@@ -184,9 +196,29 @@ export async function getProfile() {
   return result;
 }
 
+// push the event of restaurantAdded into collection
+export async function subscriptionRestaurantChange(callback: any) {
+  client
+    .subscribe({
+      query: RESTAURANT_ADDED_INTO_COLLECTION,
+    })
+    .subscribe({
+      next(data) {
+        console.log("subscription !!:", data);
+        // ... call updateQuery to integrate the new comment
+        // into the existing list of comments
+        callback(data);
+      },
+      error(err) {
+        console.error("err", err);
+      },
+    });
+}
+
 export default {
   setupApollo,
   getProfile,
   query,
   mutation,
+  subscriptionRestaurantChange,
 };

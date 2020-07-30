@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Popup from "reactjs-popup";
-import { logout } from "../account/accountSlice";
+import { getProfile, logout } from "../account/accountSlice";
 
 import { RootState } from "../../app/store";
 import {
@@ -21,9 +21,7 @@ export function CollectionBoardContent() {
   useEffect(() => {
     async function fetchData() {
       console.log("fetch fetchRestaurantCollections");
-      const resultAction = (await dispatch(
-        fetchRestaurantCollectionsInCollectionUI({})
-      )) as any;
+      dispatch(fetchRestaurantCollectionsInCollectionUI({}));
     }
     fetchData();
   }, [dispatch]);
@@ -143,9 +141,16 @@ export function CollectionBoardContent() {
 }
 
 export default function CollectionBoard() {
-  const [email, setEmail] = useState("");
-  const dispatch = useDispatch();
+  const email = useSelector((state: RootState) => state.account.email);
   let history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function fetchData() {
+      dispatch(getProfile());
+    }
+    fetchData();
+  }, [dispatch]);
 
   const onLogout = async () => {
     await dispatch(logout());

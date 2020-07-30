@@ -44,7 +44,7 @@ const initialState = restaurantsAdapter.getInitialState({
 });
 
 export const fetchRestaurants = createAsyncThunk(
-  "dashboard/fetchRestaurants",
+  "restaurants/fetchRestaurants",
   async (
     args: {
       newPage: number;

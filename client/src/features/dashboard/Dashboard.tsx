@@ -16,12 +16,13 @@ import RestaurantBlock, { WeekDay } from "./RestaurantBlock";
 export default function Dashboard() {
   let history = useHistory();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
   const [timeText, setTimeText] = useState("");
   const [weekDay, setWeekDay] = useState(0);
   const [msg, setMsg] = useState("");
   const [restaurantFilterName, setRestaurantFilterName] = useState("");
   const [selectedRestaurantID, setSelectedRestaurantID] = useState(0);
+
+  const email = useSelector((state: RootState) => state.account.email);
 
   const restaurants = useSelector((state: RootState) => state.restaurants);
   const { total, status, perPage, error, page, ids, entities } = restaurants;
@@ -43,18 +44,18 @@ export default function Dashboard() {
       console.log("unwrap result payload:", resp);
     }
     fetchData();
-  }, [dispatch]); // if add page, will retrigger
+  }, [dispatch]);
 
   useEffect(() => {
     async function fetchData() {
       console.log("profile start query");
       const resultAction = (await dispatch(getProfile())) as any;
       console.log("profile result:", resultAction); // {payload:{data:{whoAmI:{id}}}
-      const email = resultAction?.payload?.data.whoAmI?.email;
-      if (email) {
-        console.log("get profile sucessfully");
-        setEmail(email);
-      }
+      // const email = resultAction?.payload?.data.whoAmI?.email;
+      // if (email) {
+      //   console.log("get profile sucessfully");
+      //   setEmail(email);
+      // }
     }
     fetchData();
 

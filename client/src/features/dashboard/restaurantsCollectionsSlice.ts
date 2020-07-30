@@ -44,7 +44,7 @@ const initialState = restaurantCollectionsAdapter.getInitialState({
 });
 
 export const shareRestaurantCollection = createAsyncThunk(
-  "dashboard/shareRestaurantCollection",
+  "restaurantCollections/shareRestaurantCollection",
   async (
     args: { restaurantCollectionID: number; targetEamil: string },
     { getState, dispatch }
@@ -62,7 +62,7 @@ export const shareRestaurantCollection = createAsyncThunk(
 );
 
 export const addRestaurantToCollection = createAsyncThunk(
-  "dashboard/addRestaurantToCollection",
+  "restaurantCollections/addRestaurantToCollection",
   async (
     args: { restaurantName: string; restaurantCollectionName: string },
     { getState, dispatch }
@@ -86,7 +86,7 @@ export const addRestaurantToCollection = createAsyncThunk(
 );
 
 export const fetchRestaurantCollectionsInCollectionUI = createAsyncThunk(
-  "dashboard/fetchRestaurantCollectionsInCollectionUI",
+  "restaurantCollections/fetchRestaurantCollectionsInCollectionUI",
   async (args: {}, { getState, dispatch }) => {
     const resp = await dispatch(fetchRestaurantCollections({}));
 
@@ -106,7 +106,7 @@ export const fetchRestaurantCollectionsInCollectionUI = createAsyncThunk(
 );
 
 export const fetchRestaurantCollectionContent = createAsyncThunk(
-  "dashboard/fetchRestaurantCollectionContent",
+  "restaurantCollections/fetchRestaurantCollectionContent",
   async (args: { restaurantCollectionID: number }, { getState, dispatch }) => {
     const { restaurantCollectionID } = args;
     const { selectRestaurantCollection } = restaurantCollectionsSlice.actions;
@@ -129,7 +129,7 @@ export const fetchRestaurantCollectionContent = createAsyncThunk(
 );
 
 export const fetchRestaurantCollections = createAsyncThunk(
-  "dashboard/fetchRestaurantCollections",
+  "restaurantCollections/fetchRestaurantCollections",
   async (args: {}, { getState, dispatch }) => {
     const response = await GraphQLAPI.query(
       FETCH_RESTAURANT_COLLECTION_LIST,
@@ -152,6 +152,24 @@ export const restaurantCollectionsSlice = createSlice({
       console.log("selectRestaurantCollection action:", action);
       state.selectedRestaurantCollectionID =
         action.payload.selectedRestaurantCollectionID;
+    },
+    restaurantAddedIntoCollection(state, action) {
+      // action.payload =
+
+      const { restaurant, restaurantCollectionID } = action.payload;
+
+      console.log("restaurantAddedIntoCollection:", action);
+      if (state.selectedRestaurantCollectionID === restaurantCollectionID) {
+        // const restaurants =
+        //   state.entities[state.selectedRestaurantCollectionID].restaurants;
+        if (state.entities[state.selectedRestaurantCollectionID]?.restaurants) {
+          const collection =
+            state.entities[state.selectedRestaurantCollectionID];
+          if (collection?.restaurants) {
+            collection.restaurants.push(restaurant);
+          }
+        }
+      }
     },
   },
   extraReducers: (builder) => {

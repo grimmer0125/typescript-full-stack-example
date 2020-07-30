@@ -55,11 +55,11 @@ export class RestaurantCollectionsService {
     return false;
   }
 
-  async create(
+  async upsert(
     user: User,
     restaurantName: string,
     restaurantCollectionName: string,
-  ): Promise<RestaurantCollection> {
+  ) {
     console.log(
       'restaurantName,',
       user,
@@ -124,7 +124,7 @@ export class RestaurantCollectionsService {
     restaurant.collections.push(collection);
     await this.restaurantsRepository.save(restaurant);
 
-    return collection;
+    return { collection, restaurant };
   }
 
   async findRestaurantCollectionContent(
