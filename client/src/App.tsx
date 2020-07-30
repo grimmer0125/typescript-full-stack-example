@@ -5,8 +5,6 @@ import { ApolloProvider } from "@apollo/client";
 
 import { setupApollo } from "./api/graphql-api";
 
-import Test1 from "./Test1";
-import { Counter } from "./features/counter/Counter";
 import Signup from "./features/account/Signup";
 import Login from "./features/account/Login";
 import Dashboard from "./features/dashboard/Dashboard";
@@ -26,17 +24,11 @@ export default function App() {
             <Route path="/collection">
               <CollectionBoard />
             </Route>
-            <Route path="/counter_redux">
-              <Counter />
-            </Route>
             <Route path="/signup">
               <Signup />
             </Route>
             <Route path="/login">
               <Login />
-            </Route>
-            <Route path="/test1">
-              <Test1 />
             </Route>
             <Route path="/about">
               <About />
