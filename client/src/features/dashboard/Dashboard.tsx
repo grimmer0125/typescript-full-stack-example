@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { unwrapResult } from "@reduxjs/toolkit";
 
 import { Link } from "react-router-dom";
 
@@ -20,7 +19,7 @@ export default function Dashboard() {
   const [weekDay, setWeekDay] = useState(0);
   const [msg, setMsg] = useState("");
   const [restaurantFilterName, setRestaurantFilterName] = useState("");
-  const [selectedRestaurantID, setSelectedRestaurantID] = useState(0);
+  // const [selectedRestaurantID, setSelectedRestaurantID] = useState(0);
 
   const email = useSelector((state: RootState) => state.account.email);
 
@@ -35,17 +34,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchData() {
-      const resultAction = (await dispatch(
-        fetchRestaurants({ newPage: 1 })
-      )) as any;
-      const resp = unwrapResult(resultAction);
+      dispatch(fetchRestaurants({ newPage: 1 }));
     }
     fetchData();
   }, [dispatch]);
 
   useEffect(() => {
     async function fetchData() {
-      const resultAction = (await dispatch(getProfile())) as any;
+      dispatch(getProfile());
     }
     fetchData();
 
@@ -54,13 +50,13 @@ export default function Dashboard() {
     };
   }, [dispatch]);
 
-  const onRestaurantClick = (restaurantID: number) => {
-    setSelectedRestaurantID(restaurantID);
-  };
+  // const onRestaurantClick = (restaurantID: number) => {
+  //   setSelectedRestaurantID(restaurantID);
+  // };
 
-  const unselectRestaurant = () => {
-    setSelectedRestaurantID(0);
-  };
+  // const unselectRestaurant = () => {
+  //   setSelectedRestaurantID(0);
+  // };
 
   let content;
   if (status === Loading.Pending) {

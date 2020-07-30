@@ -30,12 +30,6 @@ export default function App() {
             <Route path="/login">
               <Login />
             </Route>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
             <Route path="/">
               <Login />
             </Route>
@@ -44,16 +38,4 @@ export default function App() {
       </Router>
     </ApolloProvider>
   );
-}
-
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
 }

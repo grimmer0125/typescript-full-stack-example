@@ -54,9 +54,7 @@ export default function RestaurantBlock(props: RestaurantBlockProps) {
 
   useEffect(() => {
     async function fetchData() {
-      const resultAction = (await dispatch(
-        fetchRestaurantCollections({})
-      )) as any;
+      dispatch(fetchRestaurantCollections({}));
     }
     if (open === true) {
       fetchData();

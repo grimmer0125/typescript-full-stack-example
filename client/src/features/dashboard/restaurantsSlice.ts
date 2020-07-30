@@ -64,7 +64,7 @@ export const fetchRestaurants = createAsyncThunk(
     } = args;
     const state = getState() as RootState;
     const {
-      restaurants: { perPage, page, status, total },
+      restaurants: { perPage, status, total },
     } = state;
     let response: ApolloQueryResult<any>;
     const { switchPage, issueFilterRequest } = restaurantsSlice.actions;
