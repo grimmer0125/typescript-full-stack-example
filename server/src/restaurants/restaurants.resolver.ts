@@ -39,7 +39,6 @@ export class RestaurantsResolver {
   @Subscription(returns => RestaurantChangedData, {
     name: 'restaurantAddedIntoCollection',
     filter: (payload, variables, context) => {
-      console.log('sub payload:', payload);
       // besides context, client can send subscription's variables
       if (
         payload?.restaurantAddedIntoCollection?.target ===
@@ -62,7 +61,6 @@ export class RestaurantsResolver {
     restaurantCollectionID: number,
     @Args('targetEamil') targetEamil: string,
   ) {
-    console.log('Share collection');
     const data = await this.restaurantCollectionsService.shareToOtherEmail(
       restaurantCollectionID,
       targetEamil,
@@ -92,7 +90,6 @@ export class RestaurantsResolver {
     @Args('restaurantName') restaurantName: string,
     @Args('restaurantCollectionName') restaurantCollectionName: string,
   ) {
-    console.log('add to collection');
     const data = await this.restaurantCollectionsService.upsert(
       user,
       restaurantName,
@@ -103,11 +100,9 @@ export class RestaurantsResolver {
 
     if (collection.owners) {
       for (const target of collection.owners) {
-        console.log('publish1');
         if (target.username === user.username) {
           continue;
         }
-        console.log('publish2');
         /**
          * publish to other owners
          */
@@ -143,7 +138,6 @@ export class RestaurantsResolver {
     @Args('filterTime') filterTime?: string,
     @Args('filterRestaurentName') filterRestaurentName?: string,
   ) {
-    console.log('get fetchRestaurants ');
     if (filterWeekDay || filterTime || filterRestaurentName) {
       const data = await this.restaurantsService.findRestaurantsByFilter(
         perPage,
@@ -161,14 +155,11 @@ export class RestaurantsResolver {
 
   @Mutation(returns => String)
   async etlRestaurantRawData(@Args('sourceURL') sourceURL: string) {
-    console.log('fetchURL:', sourceURL);
-
     const response = await axios.get(sourceURL);
 
     /**
      * convert response.data (csv) to db data
      */
-    console.log('csv:', response.data.length);
     await this.restaurantsService.batchUpsert(response.data);
 
     return 'ok';

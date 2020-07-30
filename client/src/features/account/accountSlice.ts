@@ -24,13 +24,11 @@ export const login = createAsyncThunk(
   "user/login",
   async (user: { username: string; password: string }) => {
     const response = await RestfulAccountAPI.login(user);
-    console.log("login resp:", response);
     return response;
   }
 );
 
 export const logout = createAsyncThunk("user/logout", async () => {
-  console.log("logout reducer");
   await RestfulAccountAPI.logout();
 });
 
@@ -40,20 +38,10 @@ export const getProfile = createAsyncThunk(
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
     if (!state.account.email) {
-      console.log("setup subscription");
       /**
        * setup subscription
        */
       GraphQLAPI.subscriptionRestaurantChange((response: any) => {
-        console.log("get RestaurantAdded to my collection:", response);
-        // const {
-        //   data: { restaurantAddedIntoCollection },
-        // } = response;
-        // const {
-        //   restaurant,
-        //   restaurantCollectionID,
-        // } = response.data.restaurantAddedIntoCollection;
-
         const {
           restaurantAddedIntoCollection,
         } = restaurantCollectionsSlice.actions;
@@ -66,7 +54,6 @@ export const getProfile = createAsyncThunk(
       });
     }
     const response = await GraphQLAPI.getProfile();
-    console.log("profile resp:", response);
     return response;
   }
 );

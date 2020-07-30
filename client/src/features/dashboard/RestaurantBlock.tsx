@@ -54,7 +54,6 @@ export default function RestaurantBlock(props: RestaurantBlockProps) {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("fetch fetchRestaurantCollections");
       const resultAction = (await dispatch(
         fetchRestaurantCollections({})
       )) as any;
@@ -75,7 +74,6 @@ export default function RestaurantBlock(props: RestaurantBlockProps) {
   }
 
   const onSelectCollection = (restaurantCollectionID: number) => {
-    console.log("select");
     const restaurantCollection = entities[restaurantCollectionID];
     if (restaurantCollection) {
       setSelectedCollectionName(restaurantCollection.name);
@@ -88,8 +86,6 @@ export default function RestaurantBlock(props: RestaurantBlockProps) {
     setSelectedCollectionName(event.target.value);
   };
   const onSubmit = async () => {
-    console.log("submit to a new collection");
-
     await dispatch(
       addRestaurantToCollection({
         restaurantName: restaurant.name,

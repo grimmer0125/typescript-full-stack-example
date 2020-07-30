@@ -15,9 +15,7 @@ export default function SignupUI() {
 
   // TODO: figure data & resultAction's typing later
   const onSubmit = async (data: any) => {
-    console.log("signup submit:", data);
     const resultAction = (await dispatch(signup(data))) as any;
-    console.log("after signup submit:", resultAction);
     if (resultAction?.payload?.email) {
       setMsg("sign up successfully");
     }

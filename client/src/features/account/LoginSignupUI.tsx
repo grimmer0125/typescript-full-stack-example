@@ -17,7 +17,6 @@ export interface LoginSignupProps {
 // TODO: add signing up/LoggingIn roading UI
 export function LoginSignupUI(props: LoginSignupProps) {
   const { onSubmit, ifLoginUI, msg, loginStatus } = props;
-  console.log("loginStatus:", loginStatus);
   let combineMsg = "";
   if (msg) {
     combineMsg = msg;
@@ -26,7 +25,6 @@ export function LoginSignupUI(props: LoginSignupProps) {
   }
 
   const { register, handleSubmit, watch, errors } = useForm();
-  // console.log("errors:", errors);
 
   console.log(watch("example")); // watch input value by passing the name of it
 

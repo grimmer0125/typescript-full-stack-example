@@ -60,15 +60,6 @@ export class RestaurantCollectionsService {
     restaurantName: string,
     restaurantCollectionName: string,
   ) {
-    console.log(
-      'restaurantName,',
-      user,
-      restaurantName,
-      restaurantCollectionName,
-    );
-
-    // user -> collection -> restaurant
-
     /**
      * find the restaurant
      */
@@ -131,9 +122,6 @@ export class RestaurantCollectionsService {
     user: User,
     restaurantCollectionID: number,
   ) {
-    // const { userID, username } = user;
-    console.log('findRestaurantCollections');
-
     const restaurantCollection = await this.restaurantCollectionssRepository
       .createQueryBuilder('restaurantCollection')
       .leftJoinAndSelect('restaurantCollection.restaurants', 'restaurant')
@@ -154,21 +142,16 @@ export class RestaurantCollectionsService {
       throw new Error('this restaurantCollection does not belong to you');
     }
 
-    console.log('found restaurantCollection:', restaurantCollection);
     return restaurantCollection;
   }
 
   async findRestaurantCollections(user: User) {
-    // const { userID, username } = user;
-    console.log('findRestaurantCollections');
-
     const foundUser = await this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.restaurantCollections', 'restaurantCollection')
       .where('user.id = :id', { id: user.id })
       .getOne();
 
-    console.log('foundUser:', foundUser);
     return {
       total: foundUser.restaurantCollections.length,
       restaurantCollections: foundUser.restaurantCollections,

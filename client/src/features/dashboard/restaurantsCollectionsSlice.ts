@@ -76,11 +76,6 @@ export const addRestaurantToCollection = createAsyncThunk(
       data: { addRestaurantToCollection },
     } = response;
 
-    console.log(
-      "add RestaurantToCollection restul:",
-      addRestaurantToCollection
-    );
-
     return addRestaurantToCollection;
   }
 );
@@ -95,7 +90,6 @@ export const fetchRestaurantCollectionsInCollectionUI = createAsyncThunk(
     } = resp;
 
     if (restaurantCollections.length > 0) {
-      console.log("query first restaurantCollection content");
       const restaurantCollection = restaurantCollections[0];
       const { id } = restaurantCollection;
       dispatch(
@@ -148,20 +142,13 @@ export const restaurantCollectionsSlice = createSlice({
   initialState: initialState,
   reducers: {
     selectRestaurantCollection(state, action) {
-      ///
-      console.log("selectRestaurantCollection action:", action);
       state.selectedRestaurantCollectionID =
         action.payload.selectedRestaurantCollectionID;
     },
     restaurantAddedIntoCollection(state, action) {
-      // action.payload =
-
       const { restaurant, restaurantCollectionID } = action.payload;
 
-      console.log("restaurantAddedIntoCollection:", action);
       if (state.selectedRestaurantCollectionID === restaurantCollectionID) {
-        // const restaurants =
-        //   state.entities[state.selectedRestaurantCollectionID].restaurants;
         if (state.entities[state.selectedRestaurantCollectionID]?.restaurants) {
           const collection =
             state.entities[state.selectedRestaurantCollectionID];
@@ -180,9 +167,6 @@ export const restaurantCollectionsSlice = createSlice({
     builder.addCase(
       fetchRestaurantCollectionContent.fulfilled,
       (state, { payload }) => {
-        console.log("fetchRestaurantCollectionContent paylaod:", payload);
-        //        store.dispatch(bookUpdated({ id: 'a', changes: { title: 'First (altered)' } }))
-
         restaurantCollectionsAdapter.updateOne(state, {
           id: payload.id,
           changes: payload,

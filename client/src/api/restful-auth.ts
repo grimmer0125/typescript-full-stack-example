@@ -8,8 +8,6 @@ export async function signup(singUpArg: {
   email: string;
   password: string;
 }): Promise<void> {
-  console.log("signup");
-
   const hashPassword = SHA256(singUpArg.password).toString();
 
   const response = await fetch(`${restURL}/auth/signup`, {
@@ -33,7 +31,6 @@ export interface LoginReturnObj {
 }
 
 async function logout() {
-  console.log("remove access_token");
   localStorage.removeItem("access_token");
 }
 
@@ -41,8 +38,6 @@ async function login(loginArg: {
   username: string;
   password: string;
 }): Promise<LoginReturnObj> {
-  console.log("login");
-
   const hashPassword = SHA256(loginArg.password).toString();
 
   const response = await fetch(`${restURL}/auth/login`, {
@@ -63,7 +58,6 @@ async function login(loginArg: {
 
     // save accessToken in localStorage
     const { access_token } = data;
-    console.log("login response ok:", data);
     localStorage.setItem("access_token", access_token);
 
     return data;

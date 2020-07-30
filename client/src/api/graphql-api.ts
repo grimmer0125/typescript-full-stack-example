@@ -204,7 +204,6 @@ export async function subscriptionRestaurantChange(callback: any) {
     })
     .subscribe({
       next(data) {
-        console.log("subscription !!:", data);
         // ... call updateQuery to integrate the new comment
         // into the existing list of comments
         callback(data);

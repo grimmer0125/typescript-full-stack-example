@@ -20,7 +20,6 @@ export function CollectionBoardContent() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("fetch fetchRestaurantCollections");
       dispatch(fetchRestaurantCollectionsInCollectionUI({}));
     }
     fetchData();
@@ -36,8 +35,6 @@ export function CollectionBoardContent() {
   } = restaurantCollections;
 
   const onSelectCollection = (restaurantCollectionID: number) => {
-    console.log("select restaurantCollectionID:", restaurantCollectionID);
-
     dispatch(fetchRestaurantCollectionContent({ restaurantCollectionID }));
   };
 

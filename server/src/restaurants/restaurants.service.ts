@@ -49,9 +49,6 @@ function convertTimeStrToDBStandard(time: string) {
     hourStr = '00';
   }
   const finalStr = hourStr + ':' + minuteStr + ':00';
-  if (finalStr === '09 :00:00') {
-    console.log('bingo');
-  }
   return finalStr;
 }
 
@@ -70,8 +67,6 @@ export class RestaurantsService {
     page: number,
     filterRestaurentName: string,
   ) {
-    console.log('read restaurant by filter start');
-
     const restaurants = await this.restaurantsRepository
       .createQueryBuilder('restaurant')
       .leftJoinAndSelect('restaurant.openTimes', 'openTime')
@@ -82,7 +77,6 @@ export class RestaurantsService {
       .skip(0)
       .take(50)
       .getMany();
-    console.log('get restaurant');
 
     return {
       restaurants,
@@ -101,8 +95,6 @@ export class RestaurantsService {
     filterTime: string,
     filterRestaurentName: string,
   ) {
-    console.log('read restaurant by filter start');
-
     const skip = (page - 1) * perPage;
 
     const queryList = [];
@@ -127,8 +119,6 @@ export class RestaurantsService {
       }
       queryStr += queryList[i];
     }
-
-    console.log('queryStr:', queryStr);
 
     const openTimeList = await this.openTimesRepository.query(
       `SELECT DISTINCT ON ("open_time"."restaurantId") "open_time".*, "restaurant".* FROM open_time 
@@ -226,7 +216,6 @@ export class RestaurantsService {
       const openTimeArrayStr = fieldData[1];
       const weekDayTimeList = openTimeArrayStr.split(' / ');
       // Mon 10 am - 11 am / Tues - Weds, Fri 1:15 pm - 2:45 pm
-      // console.log('restaurant has number of opening hours:', weekDayTimeList.length);
       // weekDayTimeList = weekDayTimeList.concat(openTimeArray);
 
       // remove tail " for last one
@@ -267,9 +256,6 @@ export class RestaurantsService {
 
             const weekDayEnd: WeekDay = convertWeekStrToEnum(end); //WeekDay[end as string];
             let cursor = weekDayStart;
-            if (!end) {
-              console.log('strange');
-            }
             while (true) {
               if (cursor > WeekDay.Sun) {
                 cursor = WeekDay.Mon;
@@ -293,7 +279,6 @@ export class RestaurantsService {
         /**
          * save to DB
          */
-        // console.log('save to db:', weekDayCandidateList.length, index);
         for (const weekDay of weekDayCandidateList) {
           totalTimeObj += 1;
           console.log(`save ${totalTimeObj} timeObj into db`);

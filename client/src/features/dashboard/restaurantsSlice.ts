@@ -63,7 +63,6 @@ export const fetchRestaurants = createAsyncThunk(
       issueFilter,
     } = args;
     const state = getState() as RootState;
-    // console.log("store:", state, newPage);
     const {
       restaurants: { perPage, page, status, total },
     } = state;
@@ -111,11 +110,9 @@ export const restaurantsSlice = createSlice({
   reducers: {
     // TODO: add action typing later
     switchPage(state, action) {
-      console.log("switchPage action:", action);
       state.page = action.payload.page;
     },
     issueFilterRequest(state, action) {
-      console.log("issue filter in reducer");
       state.total = Infinity;
       state.page = 1;
     },
@@ -128,8 +125,7 @@ export const restaurantsSlice = createSlice({
     builder.addCase(fetchRestaurants.fulfilled, (state, { payload }) => {
       restaurantsAdapter.setAll(state, payload.restaurants);
       state.status = Loading.Succeeded;
-      console.log("check returned data:", payload);
-      console.log("page:", state.page);
+
       const { restaurants } = payload;
 
       if (payload.total) {

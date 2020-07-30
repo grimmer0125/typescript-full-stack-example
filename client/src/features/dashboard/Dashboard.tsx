@@ -35,27 +35,17 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("fetchRestaurants start query");
       const resultAction = (await dispatch(
         fetchRestaurants({ newPage: 1 })
       )) as any;
-      console.log("fetchRestaurants result:", resultAction); // {payload:{data:{whoAmI:{id}}}
       const resp = unwrapResult(resultAction);
-      console.log("unwrap result payload:", resp);
     }
     fetchData();
   }, [dispatch]);
 
   useEffect(() => {
     async function fetchData() {
-      console.log("profile start query");
       const resultAction = (await dispatch(getProfile())) as any;
-      console.log("profile result:", resultAction); // {payload:{data:{whoAmI:{id}}}
-      // const email = resultAction?.payload?.data.whoAmI?.email;
-      // if (email) {
-      //   console.log("get profile sucessfully");
-      //   setEmail(email);
-      // }
     }
     fetchData();
 
@@ -65,12 +55,10 @@ export default function Dashboard() {
   }, [dispatch]);
 
   const onRestaurantClick = (restaurantID: number) => {
-    console.log("onRestaurantClick:", restaurantID);
     setSelectedRestaurantID(restaurantID);
   };
 
   const unselectRestaurant = () => {
-    console.log("unselectRestaurant");
     setSelectedRestaurantID(0);
   };
 
@@ -126,18 +114,15 @@ export default function Dashboard() {
   };
 
   const handleWeekDayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("day:", event.target.value);
     setWeekDay(parseInt(event.target.value));
   };
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("time:", event);
     setTimeText(event.target.value);
   };
 
   const handleRestaurantNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("RestaurantName:", event);
     setRestaurantFilterName(event.target.value);
   };
 

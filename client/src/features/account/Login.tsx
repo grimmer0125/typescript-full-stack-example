@@ -22,8 +22,6 @@ export default function Login() {
     // TODO: figure its typing later
     const resultAction = (await dispatch(login(data))) as any;
 
-    console.log("after login submit, resultAction:", resultAction);
-
     const resp = unwrapResult(resultAction);
     console.log("unwrap result payload:", resp);
     // can use above unwrapResult instead
