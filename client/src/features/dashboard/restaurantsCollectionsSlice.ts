@@ -4,14 +4,12 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 
-import { ApolloQueryResult } from "@apollo/client";
 import GraphQLAPI, {
   FETCH_RESTAURANT_COLLECTION_LIST,
   ADD_RESTAURANT_TO_COLLECTION,
   FETCH_RESTAURANT_COLLECTION_CONTENT,
+  SHARE_RESTAURANT_COLLECTION_TO_EMAIL,
 } from "../../api/graphql-api";
-
-import { RootState } from "../../app/store";
 
 import { Restaurant, Loading } from "./restaurantsSlice";
 
@@ -44,6 +42,24 @@ const initialState = restaurantCollectionsAdapter.getInitialState({
   //currently total is the same as entities.length
   total: 0,
 });
+
+export const shareRestaurantCollection = createAsyncThunk(
+  "dashboard/shareRestaurantCollection",
+  async (
+    args: { restaurantCollectionID: number; targetEamil: string },
+    { getState, dispatch }
+  ) => {
+    const { restaurantCollectionID, targetEamil } = args;
+    const response = await GraphQLAPI.mutation(
+      SHARE_RESTAURANT_COLLECTION_TO_EMAIL,
+      {
+        restaurantCollectionID,
+        targetEamil,
+      }
+    );
+    return response;
+  }
+);
 
 export const addRestaurantToCollection = createAsyncThunk(
   "dashboard/addRestaurantToCollection",

@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import Popup from "reactjs-popup";
 import { logout } from "../account/accountSlice";
 
 import { RootState } from "../../app/store";
 import {
-  fetchRestaurantCollections,
   fetchRestaurantCollectionsInCollectionUI,
   fetchRestaurantCollectionContent,
+  shareRestaurantCollection,
 } from "./restaurantsCollectionsSlice";
 import RestaurantBlock from "./RestaurantBlock";
 
 export function CollectionBoardContent() {
   const dispatch = useDispatch();
-  // const [selectedRestaurantCollectionID, setSelectedRestaurantCollectionID] = useState("");
+  const [shareTarget, setShareTarget] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -42,6 +43,22 @@ export function CollectionBoardContent() {
     dispatch(fetchRestaurantCollectionContent({ restaurantCollectionID }));
   };
 
+  const shareTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShareTarget(event.target.value);
+  };
+
+  const onShareSubmit = (restaurantCollectionID: number, close: any) => {
+    if (shareTarget) {
+      dispatch(
+        shareRestaurantCollection({
+          restaurantCollectionID,
+          targetEamil: shareTarget,
+        })
+      );
+      close();
+    }
+  };
+
   const collectionContent = ids.map((restaurantCollectionID) => {
     const restaurantCollection = entities[restaurantCollectionID];
     if (restaurantCollection) {
@@ -50,15 +67,35 @@ export function CollectionBoardContent() {
           onClick={() => onSelectCollection(restaurantCollectionID as number)}
           key={restaurantCollection.id}
           style={{
+            display: "flex",
             width: "200px",
             height: "65px",
             margin: "10px 10px",
             borderStyle: "solid",
             borderWidth: "2px",
             borderColor: "#7FC8FF",
+            justifyContent: "space-between",
           }}
         >
-          {restaurantCollection.name}
+          <div>{restaurantCollection.name}</div>
+          <Popup trigger={<button>Share</button>} position="top left">
+            {(close) => (
+              <div>
+                Share to others (email address):
+                <input
+                  style={{ width: 110 }}
+                  onChange={shareTextChange}
+                  value={shareTarget}
+                  placeholder="e.g. apple@apple.com"
+                />
+                <button
+                  onClick={() => onShareSubmit(restaurantCollection.id, close)}
+                >
+                  submit
+                </button>
+              </div>
+            )}
+          </Popup>
         </div>
       );
     } else {

@@ -19,6 +19,42 @@ export class RestaurantCollectionsService {
     private restaurantCollectionssRepository: Repository<RestaurantCollection>,
   ) {}
 
+  async shareToOtherEmail(restaurantCollectionID: number, targetEamil: string) {
+    const user = await this.usersRepository.findOne({ email: targetEamil });
+    if (!user) {
+      throw new Error('no this email account');
+    }
+
+    const restaurantCollection = await await this.restaurantCollectionssRepository.findOne(
+      {
+        where: {
+          id: restaurantCollectionID,
+        },
+        relations: ['owners'],
+      },
+    );
+    if (restaurantCollection) {
+      if (
+        restaurantCollection.owners.find(owner => {
+          if (owner.id === user.id) {
+            return true;
+          }
+        })
+      ) {
+        throw new Error(
+          'this restaurantCollection already belongs to this email:' +
+            targetEamil,
+        );
+      }
+
+      restaurantCollection.owners.push(user);
+      await this.restaurantCollectionssRepository.save(restaurantCollection);
+
+      return true;
+    }
+    return false;
+  }
+
   async create(
     user: User,
     restaurantName: string,
@@ -115,14 +151,8 @@ export class RestaurantCollectionsService {
         }
       })
     ) {
-      throw new Error('no restaurantCollection');
+      throw new Error('this restaurantCollection does not belong to you');
     }
-
-    // const categoriesWithQuestions = await connection
-    //   .getRepository(Category)
-    //   .createQueryBuilder('category')
-    //   .leftJoinAndSelect('category.questions', 'question')
-    //   .getMany();
 
     console.log('found restaurantCollection:', restaurantCollection);
     return restaurantCollection;

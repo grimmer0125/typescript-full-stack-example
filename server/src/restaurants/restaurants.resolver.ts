@@ -18,9 +18,27 @@ export class RestaurantsResolver {
     private restaurantCollectionsService: RestaurantCollectionsService,
   ) {}
 
+  /** for testing */
   @Query(returns => String)
   async hello3() {
     return 'world3';
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(returns => Boolean)
+  async shareRestaurantCollectionToEmail(
+    @CurrentUser() user: User,
+    @Args('restaurantCollectionID', { type: () => Int })
+    restaurantCollectionID: number,
+    @Args('targetEamil') targetEamil: string,
+  ) {
+    console.log('Share collection');
+    const data = await this.restaurantCollectionsService.shareToOtherEmail(
+      restaurantCollectionID,
+      targetEamil,
+    );
+
+    return data;
   }
 
   @Query(returns => RestaurantCollection)
