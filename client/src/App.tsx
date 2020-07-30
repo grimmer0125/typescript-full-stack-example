@@ -1,34 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import {
-  ApolloClient,
-  createHttpLink,
-  InMemoryCache,
-  HttpLink,
-} from "@apollo/client";
 import { ApolloProvider } from "@apollo/client";
 
-import { setContext } from "@apollo/client/link/context";
-import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition } from "@apollo/client/utilities";
-import { split } from "@apollo/client";
-
 import { setupApollo } from "./api/graphql-api";
-
-// import { ApolloClient } from "apollo-client";
-// import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
-// import { createHttpLink } from "apollo-link-http";
-// import { WebSocketLink } from "apollo-link-ws";
-// import { ApolloLink, split } from "apollo-link";
-// import { setContext } from "apollo-link-context";
-// import { getMainDefinition } from "apollo-utilities";
 
 import Test1 from "./Test1";
 import { Counter } from "./features/counter/Counter";
 import Signup from "./features/account/Signup";
 import Login from "./features/account/Login";
 import Dashboard from "./features/dashboard/Dashboard";
+import CollectionBoard from "./features/dashboard/CollectionBoard";
 
 export default function App() {
   return (
@@ -40,6 +22,9 @@ export default function App() {
           <Switch>
             <Route path="/dashboard">
               <Dashboard />
+            </Route>
+            <Route path="/collection">
+              <CollectionBoard />
             </Route>
             <Route path="/counter_redux">
               <Counter />

@@ -18,6 +18,25 @@ export class RestaurantsResolver {
     private restaurantCollectionsService: RestaurantCollectionsService,
   ) {}
 
+  @Query(returns => String)
+  async hello3() {
+    return 'world3';
+  }
+
+  @Query(returns => RestaurantCollection)
+  @UseGuards(GqlAuthGuard)
+  async fetchRestaurantCollectionContent(
+    @CurrentUser() user: User,
+    @Args('restaurantCollectionID', { type: () => Int })
+    restaurantCollectionID?: number,
+  ) {
+    const data = await this.restaurantCollectionsService.findRestaurantCollectionContent(
+      user,
+      restaurantCollectionID,
+    );
+    return data;
+  }
+
   @UseGuards(GqlAuthGuard)
   @Mutation(returns => RestaurantCollection)
   async addRestaurantToCollection(

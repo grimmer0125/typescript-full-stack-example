@@ -24,26 +24,18 @@ export class RestaurantCollection {
   @Column()
   name: string;
 
+  @Field(type => [Restaurant])
   @ManyToMany(
     type => Restaurant,
     restaurant => restaurant.collections,
   )
   restaurants: Restaurant[];
 
+  @Field(type => [User])
   @ManyToMany(
     type => User,
     owner => owner.restaurantCollections,
   )
   @JoinTable()
   owners: User[];
-
-  // @OneToMany(
-  //   type => OpenTime,
-  //   openTime => openTime.restaurant,
-  // )
-  // @Field(type => [OpenTime])
-  // openTimes: OpenTime[];
-
-  // @CreateDateColumn({ type: 'date' })
-  // created: Date;
 }

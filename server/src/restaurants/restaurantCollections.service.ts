@@ -91,6 +91,43 @@ export class RestaurantCollectionsService {
     return collection;
   }
 
+  async findRestaurantCollectionContent(
+    user: User,
+    restaurantCollectionID: number,
+  ) {
+    // const { userID, username } = user;
+    console.log('findRestaurantCollections');
+
+    const restaurantCollection = await this.restaurantCollectionssRepository
+      .createQueryBuilder('restaurantCollection')
+      .leftJoinAndSelect('restaurantCollection.restaurants', 'restaurant')
+      .leftJoinAndSelect('restaurantCollection.owners', 'user')
+      .where('restaurantCollection.id = :id', { id: restaurantCollectionID })
+      .getOne();
+
+    if (!restaurantCollection) {
+      throw new Error('no restaurantCollection');
+    }
+    if (
+      !restaurantCollection.owners.find(owner => {
+        if (owner.id === user.id) {
+          return true;
+        }
+      })
+    ) {
+      throw new Error('no restaurantCollection');
+    }
+
+    // const categoriesWithQuestions = await connection
+    //   .getRepository(Category)
+    //   .createQueryBuilder('category')
+    //   .leftJoinAndSelect('category.questions', 'question')
+    //   .getMany();
+
+    console.log('found restaurantCollection:', restaurantCollection);
+    return restaurantCollection;
+  }
+
   async findRestaurantCollections(user: User) {
     // const { userID, username } = user;
     console.log('findRestaurantCollections');

@@ -12,6 +12,14 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { split } from "@apollo/client";
 
+// import { ApolloClient } from "apollo-client";
+// import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+// import { createHttpLink } from "apollo-link-http";
+// import { WebSocketLink } from "apollo-link-ws";
+// import { ApolloLink, split } from "apollo-link";
+// import { setContext } from "apollo-link-context";
+// import { getMainDefinition } from "apollo-utilities";
+
 export let client: ApolloClient<NormalizedCacheObject>;
 
 export function setupApollo() {
@@ -81,6 +89,26 @@ export const ADD_RESTAURANT_TO_COLLECTION = gql`
     ) {
       id
       name
+    }
+  }
+`;
+
+export const FETCH_RESTAURANT_COLLECTION_CONTENT = gql`
+  query fetchRestaurantCollectionContent($restaurantCollectionID: Int!) {
+    fetchRestaurantCollectionContent(
+      restaurantCollectionID: $restaurantCollectionID
+    ) {
+      id
+      name
+      restaurants {
+        id
+        name
+      }
+      owners {
+        id
+        username
+        email
+      }
     }
   }
 `;

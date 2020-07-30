@@ -8,13 +8,17 @@ import { ApolloQueryResult } from "@apollo/client";
 import GraphQLAPI, {
   FETCH_RESTAURANT_COLLECTION_LIST,
   ADD_RESTAURANT_TO_COLLECTION,
+  FETCH_RESTAURANT_COLLECTION_CONTENT,
 } from "../../api/graphql-api";
+
+import { RootState } from "../../app/store";
 
 import { Restaurant, Loading } from "./restaurantsSlice";
 
 interface User {
   id: number;
   username: string;
+  email?: string;
 }
 
 export interface RestaurantCollection {
@@ -31,10 +35,13 @@ const restaurantCollectionsAdapter = createEntityAdapter<RestaurantCollection>({
 
 const INITIAL_PAGE = 1;
 const initialState = restaurantCollectionsAdapter.getInitialState({
+  selectedRestaurantCollectionID: Infinity, // workaround here
   status: Loading.Idle,
   error: null,
+  // unused, we do no have pagination implementation here
   perPage: 10,
   page: INITIAL_PAGE,
+  //currently total is the same as entities.length
   total: 0,
 });
 
@@ -53,9 +60,55 @@ export const addRestaurantToCollection = createAsyncThunk(
       data: { addRestaurantToCollection },
     } = response;
 
-    console.log("add restul:", addRestaurantToCollection);
+    console.log(
+      "add RestaurantToCollection restul:",
+      addRestaurantToCollection
+    );
 
     return addRestaurantToCollection;
+  }
+);
+
+export const fetchRestaurantCollectionsInCollectionUI = createAsyncThunk(
+  "dashboard/fetchRestaurantCollectionsInCollectionUI",
+  async (args: {}, { getState, dispatch }) => {
+    const resp = await dispatch(fetchRestaurantCollections({}));
+
+    const {
+      payload: { restaurantCollections },
+    } = resp;
+
+    if (restaurantCollections.length > 0) {
+      console.log("query first restaurantCollection content");
+      const restaurantCollection = restaurantCollections[0];
+      const { id } = restaurantCollection;
+      dispatch(
+        fetchRestaurantCollectionContent({ restaurantCollectionID: id })
+      );
+    }
+  }
+);
+
+export const fetchRestaurantCollectionContent = createAsyncThunk(
+  "dashboard/fetchRestaurantCollectionContent",
+  async (args: { restaurantCollectionID: number }, { getState, dispatch }) => {
+    const { restaurantCollectionID } = args;
+    const { selectRestaurantCollection } = restaurantCollectionsSlice.actions;
+
+    dispatch(
+      selectRestaurantCollection({
+        selectedRestaurantCollectionID: restaurantCollectionID,
+      })
+    );
+    const response = await GraphQLAPI.query(
+      FETCH_RESTAURANT_COLLECTION_CONTENT,
+      { restaurantCollectionID }
+    );
+    const {
+      data: { fetchRestaurantCollectionContent },
+    } = response;
+
+    return fetchRestaurantCollectionContent;
   }
 );
 
@@ -74,33 +127,46 @@ export const fetchRestaurantCollections = createAsyncThunk(
   }
 );
 
-export const restaurantsSlice = createSlice({
+export const restaurantCollectionsSlice = createSlice({
   name: "restaurantCollections",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    selectRestaurantCollection(state, action) {
+      ///
+      console.log("selectRestaurantCollection action:", action);
+      state.selectedRestaurantCollectionID =
+        action.payload.selectedRestaurantCollectionID;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase("user/logout/fulfilled", (state, _) => {
       // TODO: add some code if need
       console.log("handle logout in dashboard reducer");
     });
     builder.addCase(
+      fetchRestaurantCollectionContent.fulfilled,
+      (state, { payload }) => {
+        console.log("fetchRestaurantCollectionContent paylaod:", payload);
+        //        store.dispatch(bookUpdated({ id: 'a', changes: { title: 'First (altered)' } }))
+
+        restaurantCollectionsAdapter.updateOne(state, {
+          id: payload.id,
+          changes: payload,
+        });
+        state.status = Loading.Succeeded;
+      }
+    );
+    builder.addCase(
       addRestaurantToCollection.fulfilled,
       (state, { payload }) => {
-        console.log("add payload:", payload);
-        //[addNewPost.fulfilled]: postsAdapter.addOne,
         restaurantCollectionsAdapter.addOne(state, payload);
-        //   restaurantCollectionsAdapter.setAll(
-        //     state,
-        //     payload.restaurantCollections
-        //   );
-        //   state.status = Loading.Succeeded;
-        //   state.total = payload.total;
+        state.status = Loading.Succeeded;
+        state.total += 1;
       }
     );
     builder.addCase(
       fetchRestaurantCollections.fulfilled,
       (state, { payload }) => {
-        console.log("payload:", payload);
         restaurantCollectionsAdapter.setAll(
           state,
           payload.restaurantCollections
@@ -117,4 +183,4 @@ export const restaurantsSlice = createSlice({
   },
 });
 
-export default restaurantsSlice.reducer;
+export default restaurantCollectionsSlice.reducer;
