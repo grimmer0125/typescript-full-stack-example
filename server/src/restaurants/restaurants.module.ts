@@ -19,6 +19,6 @@ import { OpenTime } from './models/opentime.model';
     RestaurantsService,
     RestaurantCollectionsService,
     RestaurantsResolver,
-  ], // RestaurantsService
+  ],
 })
 export class RestaurantsModule {}

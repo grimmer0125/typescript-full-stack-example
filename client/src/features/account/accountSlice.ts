@@ -66,12 +66,12 @@ export const userSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
+    /**
+     * TODO: Add signup.fulfilled/pending/rejected later
+     */
     builder.addCase(getProfile.fulfilled, (state, { payload }) => {
       state.email = payload?.data?.whoAmI?.email ?? "";
     });
-    /**
-     * Add signup.fulfilled/pending/rejected later
-     */
     builder.addCase(login.fulfilled, (state, { payload }) => {
       if (payload.access_token) {
         state.loginStatus = LoginStatus.LoggedIn;
@@ -84,7 +84,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(login.rejected, (state, { payload }) => {
       /**
-       * in the future, if payload is designed has some errorMessage, we can use it
+       * in the future, if payload is designed to have some errorMessage, we can use it
        */
       state.loginStatus = LoginStatus.LoginFail;
     });

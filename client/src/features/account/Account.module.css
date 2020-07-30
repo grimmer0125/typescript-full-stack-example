@@ -1,9 +1,5 @@
 .form {
     width: 500px;
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
-    /* margin: 0; */
 }
 
 .label {
@@ -12,9 +8,6 @@
     display: block;
     margin-bottom: 13px;
     margin-top: 20px;
-    /* color: white; */
-    /* font-size: 14px; */
-    /* font-weight: 200; */
 }
 
 .input {
@@ -27,8 +20,6 @@
     margin-bottom: 10px;
     font-size: 14px;
 }
-
-
 
 .button {
     margin-top: 40px;

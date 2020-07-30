@@ -156,16 +156,6 @@ export default function RestaurantBlock(props: RestaurantBlockProps) {
           >
             {addRestaurantContent}
           </Popup>
-          {/* below works (controlled by others) but its position is not right center */}
-          {/* <button onClick={() => onRestaurantClick(restaurant.id)}>+</button>
-          <Popup
-            open={open}
-            closeOnDocumentClick
-            onClose={unselectRestaurant}
-            position="right center"
-          >
-            <span> Popup content </span>
-          </Popup> */}
         </div>
       )}
     </div>

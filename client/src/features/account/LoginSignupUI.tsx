@@ -14,7 +14,6 @@ export interface LoginSignupProps {
   loginStatus?: LoginStatus;
 }
 
-// TODO: add signing up/LoggingIn roading UI
 export function LoginSignupUI(props: LoginSignupProps) {
   const { onSubmit, ifLoginUI, msg, loginStatus } = props;
   let combineMsg = "";

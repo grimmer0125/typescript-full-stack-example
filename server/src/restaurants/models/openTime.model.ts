@@ -14,7 +14,7 @@ export class OpenTime {
   @Column()
   weekDay: number;
 
-  //00:00:00, 24:00:00
+  //00:00:00 ~ 24:00:00
   @Field()
   @Column('time without time zone')
   openHour: string;
@@ -23,7 +23,6 @@ export class OpenTime {
   @Column('time without time zone')
   closeHour: string;
 
-  // not work, why?
   @ManyToOne(
     type => Restaurant,
     restaurant => restaurant.openTimes,

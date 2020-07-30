@@ -1,10 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 import { ApolloProvider } from "@apollo/client";
 
 import { setupApollo } from "./api/graphql-api";
-
 import Signup from "./features/account/Signup";
 import Login from "./features/account/Login";
 import Dashboard from "./features/dashboard/Dashboard";

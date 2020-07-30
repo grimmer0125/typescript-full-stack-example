@@ -36,11 +36,9 @@ const initialState = restaurantCollectionsAdapter.getInitialState({
   selectedRestaurantCollectionID: Infinity, // workaround here
   status: Loading.Idle,
   error: null,
-  // unused, we do no have pagination implementation here
-  perPage: 10,
+  perPage: 10, // unused, we do no have pagination implementation here
   page: INITIAL_PAGE,
-  //currently total is the same as entities.length
-  total: 0,
+  total: 0, //currently total is the same as entities.length
 });
 
 export const shareRestaurantCollection = createAsyncThunk(

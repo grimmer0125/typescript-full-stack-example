@@ -73,7 +73,7 @@ export class RestaurantsService {
       .where('restaurant.name like :name', {
         name: '%' + filterRestaurentName + '%',
       })
-      .orderBy('restaurant.name') // TODO: add index on it?
+      .orderBy('restaurant.name')
       .skip(0)
       .take(50)
       .getMany();
@@ -84,10 +84,6 @@ export class RestaurantsService {
     };
   }
 
-  // example:
-  // total: 108
-  // const filterWeekDay = 3;
-  // const filterTime = "23:30:00"
   async findRestaurantsByFilter(
     perPage: number,
     page: number,
@@ -155,9 +151,6 @@ export class RestaurantsService {
   }
 
   async findRestaurants(perPage: number, page: number) {
-    /**
-     * TODO: check if counting implementation speed
-     */
     const data = await this.restaurantsRepository.findAndCount({
       order: {
         id: 'ASC',
@@ -182,7 +175,6 @@ export class RestaurantsService {
     /** To check if any restaurant duplicate, should not happen */
     const restaurantDict = {};
 
-    // /" is to remove tail ", but last one still has tail "
     const dataArray = data.split(/"\r?\n/);
     for (let i = 0; i < dataArray.length; i++) {
       totalRestaurant += 1;
@@ -215,8 +207,6 @@ export class RestaurantsService {
       console.log(`save ${totalRestaurant} Restaurant`);
       const openTimeArrayStr = fieldData[1];
       const weekDayTimeList = openTimeArrayStr.split(' / ');
-      // Mon 10 am - 11 am / Tues - Weds, Fri 1:15 pm - 2:45 pm
-      // weekDayTimeList = weekDayTimeList.concat(openTimeArray);
 
       // remove tail " for last one
       if (i === dataArray.length - 1) {
@@ -246,15 +236,15 @@ export class RestaurantsService {
         weekDayStr.split(', ').forEach(weekDayCommaStr => {
           const weekDays = weekDayCommaStr.split('-'); // or " - "
           if (weekDays.length === 1) {
-            const weekDay: WeekDay = convertWeekStrToEnum(weekDays[0]); // WeekDay[ as string];
-            weekDayCandidateList.push(weekDay);
             // just one day;
+            const weekDay: WeekDay = convertWeekStrToEnum(weekDays[0]);
+            weekDayCandidateList.push(weekDay);
           } else if (weekDays.length == 2) {
             const start = weekDays[0].trim();
-            const weekDayStart: WeekDay = convertWeekStrToEnum(start); //WeekDay[start as string];
+            const weekDayStart: WeekDay = convertWeekStrToEnum(start);
             const end = weekDays[1].trim();
 
-            const weekDayEnd: WeekDay = convertWeekStrToEnum(end); //WeekDay[end as string];
+            const weekDayEnd: WeekDay = convertWeekStrToEnum(end);
             let cursor = weekDayStart;
             while (true) {
               if (cursor > WeekDay.Sun) {
@@ -295,7 +285,6 @@ export class RestaurantsService {
         return a.weekDay - b.weekDay;
       });
       for (const timeObj of sortingOpenTimeList) {
-        // NOTE: change to batch save?
         await this.openTimesRepository.save(timeObj);
       }
     }

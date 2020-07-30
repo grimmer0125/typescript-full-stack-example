@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Popup from "reactjs-popup";
-import { getProfile, logout } from "../account/accountSlice";
 
+import { getProfile, logout } from "../account/accountSlice";
 import { RootState } from "../../app/store";
 import {
   fetchRestaurantCollectionsInCollectionUI,
@@ -114,9 +113,6 @@ export function CollectionBoardContent() {
               key={restaurant.id}
               restaurant={restaurant}
               noAddButton={true}
-              // onRestaurantClick={onRestaurantClick}
-              // unselectRestaurant={unselectRestaurant}
-              // open={restaurant.id === selectedRestaurantID ? true : false}
             />
           );
         });
@@ -192,20 +188,11 @@ export default function CollectionBoard() {
           overflow: "auto",
         }}
       >
-        <div style={{ display: "flex" }}>
-          {/* a top horizontal row */}
-          Title
-        </div>
+        <div style={{ display: "flex" }}>{/* a top horizontal row */}</div>
         <div style={{ width: 800, background: "white", overflow: "auto" }}>
           <CollectionBoardContent />
         </div>
-        <div>
-          {/* a bottom horizontal row */}
-          {/* Total:{total === Infinity ? "..." : total}
-              <button onClick={onPreClick}>{"<"}</button>
-              <button onClick={onNextClick}>{">"}</button>
-              page: {`${page}/${totalPage === Infinity ? "..." : totalPage}`} */}
-        </div>
+        <div>{/* a bottom horizontal row */}</div>
       </div>
     </div>
   );

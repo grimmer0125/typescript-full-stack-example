@@ -3,8 +3,8 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-
 import { ApolloQueryResult } from "@apollo/client";
+
 import GraphQLAPI, { FETCH_RESTAURANTS } from "../../api/graphql-api";
 import { RootState } from "../../app/store";
 
@@ -131,7 +131,6 @@ export const restaurantsSlice = createSlice({
       if (payload.total) {
         state.total = payload.total;
       } else {
-        // filter case
         if (restaurants.length < state.perPage) {
           state.total = state.perPage * (state.page - 1) + restaurants.length;
         }

@@ -31,8 +31,8 @@ export class RestaurantsResolver {
 
   /** for testing */
   @Query(returns => String)
-  async hello3() {
-    return 'world3';
+  async hello() {
+    return 'world';
   }
 
   @UseGuards(GqlAuthGuard)

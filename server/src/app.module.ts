@@ -11,7 +11,6 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
     RestaurantsModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true, //process.cwd() + 'src/schema.gql',
-      // context: ({ req }) => ({ req }),
       context: ({ req, connection }) =>
         connection ? { req: { headers: connection.context } } : { req },
       installSubscriptionHandlers: true,

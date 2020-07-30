@@ -141,7 +141,6 @@ export const RESTAURANT_ADDED_INTO_COLLECTION = gql`
   }
 `;
 
-// query parameter perPage, page
 export const FETCH_RESTAURANTS = gql`
   query fetchRestaurants(
     $perPage: Int!
@@ -158,7 +157,6 @@ export const FETCH_RESTAURANTS = gql`
       filterRestaurentName: $filterRestaurentName
     ) {
       total
-      # page
       restaurants {
         id
         name

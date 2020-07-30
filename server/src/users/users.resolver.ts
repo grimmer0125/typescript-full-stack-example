@@ -1,6 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Query, Resolver } from '@nestjs/graphql';
 import { User } from './models/user.model';
 import { UseGuards } from '@nestjs/common';
 

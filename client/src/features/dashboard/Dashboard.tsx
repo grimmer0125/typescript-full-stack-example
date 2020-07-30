@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-
 import { Link } from "react-router-dom";
 
 import { getProfile, logout } from "../account/accountSlice";
 import { fetchRestaurants } from "./restaurantsSlice";
-
 import { RootState } from "../../app/store";
 import { Loading } from "./restaurantsSlice";
 import RestaurantBlock, { WeekDay } from "./RestaurantBlock";
@@ -19,7 +16,6 @@ export default function Dashboard() {
   const [weekDay, setWeekDay] = useState(0);
   const [msg, setMsg] = useState("");
   const [restaurantFilterName, setRestaurantFilterName] = useState("");
-  // const [selectedRestaurantID, setSelectedRestaurantID] = useState(0);
 
   const email = useSelector((state: RootState) => state.account.email);
 
@@ -44,37 +40,16 @@ export default function Dashboard() {
       dispatch(getProfile());
     }
     fetchData();
-
-    return () => {
-      // cleanup
-    };
   }, [dispatch]);
-
-  // const onRestaurantClick = (restaurantID: number) => {
-  //   setSelectedRestaurantID(restaurantID);
-  // };
-
-  // const unselectRestaurant = () => {
-  //   setSelectedRestaurantID(0);
-  // };
 
   let content;
   if (status === Loading.Pending) {
     content = <div>Loading...</div>;
   } else if (status === Loading.Succeeded) {
-    // show restaurants
     content = ids.map((restaurantID) => {
       const restaurant = entities[restaurantID];
       if (restaurant) {
-        return (
-          <RestaurantBlock
-            key={restaurant.id}
-            restaurant={restaurant}
-            // onRestaurantClick={onRestaurantClick}
-            // unselectRestaurant={unselectRestaurant}
-            // open={restaurant.id === selectedRestaurantID ? true : false}
-          />
-        );
+        return <RestaurantBlock key={restaurant.id} restaurant={restaurant} />;
       } else {
         return <></>;
       }
