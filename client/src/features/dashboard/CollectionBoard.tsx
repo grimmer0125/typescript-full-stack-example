@@ -62,20 +62,24 @@ export function CollectionBoardContent() {
   const collectionContent = ids.map((restaurantCollectionID) => {
     const restaurantCollection = entities[restaurantCollectionID];
     if (restaurantCollection) {
+      let style = {
+        display: "flex",
+        width: "200px",
+        height: "65px",
+        margin: "10px 10px",
+        borderStyle: "solid",
+        borderWidth: "2px",
+        borderColor: "#7FC8FF",
+        justifyContent: "space-between",
+      };
+      if (selectedRestaurantCollectionID === restaurantCollectionID) {
+        style = { ...style, borderColor: "blue" };
+      }
       return (
         <div
           onClick={() => onSelectCollection(restaurantCollectionID as number)}
           key={restaurantCollection.id}
-          style={{
-            display: "flex",
-            width: "200px",
-            height: "65px",
-            margin: "10px 10px",
-            borderStyle: "solid",
-            borderWidth: "2px",
-            borderColor: "#7FC8FF",
-            justifyContent: "space-between",
-          }}
+          style={style}
         >
           <div>{restaurantCollection.name}</div>
           <Popup trigger={<button>Share</button>} position="top left">
