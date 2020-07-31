@@ -55,9 +55,9 @@ To browse collection list, click `collection` link in the top bar to navigate to
 
 1. Before doing this, your target user must signup first. 
 2. In `/collection`, click `+` to input the email of the target user. 
-3. The target user will be shared !!
+3. The target user will be authorized to see this shared collection and able to add a restaurant into it !!
 
-### Real-time Auto Synchronization Data is via GraphQL Subscription
+### Real-time Auto Synchronization Data
 
 Current done:
 1. User A chooses a shared collection to see its detailed restaurant list. 
