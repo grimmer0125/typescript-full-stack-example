@@ -29,15 +29,40 @@ Open http://localhost:3000 to play this example.
 - TypeORM
 - Passport (jwt)
 
-## Load data
+## Functionality
+
+### Load data
 
 Open http://localhost:3001/graphql, in the playground, use `mutation fetchRawData` to ask the server to load the Data.
 
-## Real-time Auto Synchronization Data is via GraphQL Subscription
+p.s. A few restuarants(~11) in the raw data has duplicate row. Currently the code just choose the first one. 
 
-### Current done:
+### Signup and login 
 
-A user chooses a shared collection, B add a restaurant into this shared collection. A will see the added one without refreshing.
+No email verification and password reset yet. 
+
+### Pagination of Restaurants
+
+### Filter by WeekDay, Time, and restaurant Name 
+
+### Save restaurants to a named collection and browse collection list 
+
+In `/dashboard`, click the `+` button in a restaurant cell, input a restaurant collection, then click `submit` to store it. You can input a new or existing collection name. For existing collection, click a collection to copy its name to speed up.
+
+To browse collection list, click `collection` link in the top bar to navigate to `/collection`. You can also click a collection to see its restaurant list in the right panel.
+
+### Share a restaurant collection to others 
+
+1. Before doing this, your target user must signup first. 
+2. In `/collection`, click `+` to input the email of the target user. 
+3. The target user will be shared !!
+
+### Real-time Auto Synchronization Data is via GraphQL Subscription
+
+Current done:
+1. User A chooses a shared collection to see its detailed restaurant list. 
+2. User B add a restaurant into this shared collection. 
+3. User A will see the added one without refreshing.
 
 ## Deployment
 
