@@ -123,11 +123,13 @@ export const restaurantsSlice = createSlice({
       console.log("handle logout in dashboard reducer");
     });
     builder.addCase(fetchRestaurants.fulfilled, (state, { payload }) => {
-      restaurantsAdapter.setAll(state, payload.restaurants);
       state.status = Loading.Succeeded;
+      if (!payload?.restaurants) {
+        return;
+      }
 
+      restaurantsAdapter.setAll(state, payload.restaurants);
       const { restaurants } = payload;
-
       if (payload.total) {
         state.total = payload.total;
       } else {
