@@ -62,12 +62,12 @@ export const shareRestaurantCollection = createAsyncThunk(
 export const addRestaurantToCollection = createAsyncThunk(
   "restaurantCollections/addRestaurantToCollection",
   async (
-    args: { restaurantName: string; restaurantCollectionName: string },
+    args: { restaurantID: number; restaurantCollectionName: string },
     { getState, dispatch }
   ) => {
-    const { restaurantName, restaurantCollectionName } = args;
+    const { restaurantID, restaurantCollectionName } = args;
     const response = await GraphQLAPI.mutation(ADD_RESTAURANT_TO_COLLECTION, {
-      restaurantName: restaurantName,
+      restaurantID: restaurantID,
       restaurantCollectionName: restaurantCollectionName,
     });
     const {

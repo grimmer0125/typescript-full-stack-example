@@ -72,11 +72,11 @@ export const GET_PROFILE = gql`
 /** assume one people can not have two same name collection */
 export const ADD_RESTAURANT_TO_COLLECTION = gql`
   mutation addRestaurantToCollection(
-    $restaurantName: String!
+    $restaurantID: Int!
     $restaurantCollectionName: String!
   ) {
     addRestaurantToCollection(
-      restaurantName: $restaurantName
+      restaurantID: $restaurantID
       restaurantCollectionName: $restaurantCollectionName
     ) {
       id

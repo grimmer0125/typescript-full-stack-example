@@ -86,7 +86,7 @@ export default function RestaurantBlock(props: RestaurantBlockProps) {
   const onSubmit = async () => {
     await dispatch(
       addRestaurantToCollection({
-        restaurantName: restaurant.name,
+        restaurantID: restaurant.id,
         restaurantCollectionName: selectedCollectionName,
       })
     );

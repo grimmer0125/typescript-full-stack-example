@@ -87,12 +87,13 @@ export class RestaurantsResolver {
   @Mutation(returns => RestaurantCollection)
   async addRestaurantToCollection(
     @CurrentUser() user: User,
-    @Args('restaurantName') restaurantName: string,
-    @Args('restaurantCollectionName') restaurantCollectionName: string,
+    @Args('restaurantID', { type: () => Int }) restaurantID: number,
+    @Args('restaurantCollectionName')
+    restaurantCollectionName: string,
   ) {
     const data = await this.restaurantCollectionsService.upsert(
       user,
-      restaurantName,
+      restaurantID,
       restaurantCollectionName,
     );
 

@@ -57,7 +57,7 @@ export class RestaurantCollectionsService {
 
   async upsert(
     user: User,
-    restaurantName: string,
+    restaurantID: number,
     restaurantCollectionName: string,
   ) {
     /**
@@ -65,7 +65,7 @@ export class RestaurantCollectionsService {
      */
     const restaurant = await this.restaurantsRepository.findOne({
       where: {
-        name: restaurantName,
+        id: restaurantID,
       },
       relations: ['collections'],
     });
