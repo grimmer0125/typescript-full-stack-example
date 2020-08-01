@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+
 @Module({
   imports: [
     RestaurantsModule,
@@ -19,11 +20,11 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: process.env.POSTGRES_HOST ?? 'localhost',
       port: 5432,
-      username: 'postgres',
-      password: 'test',
-      database: 'postgres',
+      username: process.env.POSTGRES_USER ?? 'postgres',
+      password: process.env.POSTGRES_PASSWORD ?? '',
+      database: process.env.POSTGRES_DB ?? 'postgres',
       entities: [],
       autoLoadEntities: true,
       synchronize: true,

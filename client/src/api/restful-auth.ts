@@ -1,7 +1,7 @@
 import { SHA256 } from "crypto-js";
 
-// TODO: add optional environment setting for production
-const restURL = "http://localhost:3001";
+const apiURL = process.env.REACT_APP_API_URL ?? "localhost:3001";
+const restURL = `http://${apiURL}`;
 
 export async function signup(singUpArg: {
   username: string;

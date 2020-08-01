@@ -14,9 +14,11 @@ import { split } from "@apollo/client";
 
 export let client: ApolloClient<NormalizedCacheObject>;
 
+const apiURL = process.env.REACT_APP_API_URL ?? "localhost:3001";
+
 export function setupApollo() {
-  const GRAPHQL_ENDPOINT = "http://localhost:3001/graphql";
-  const GRAPHQL_WS_ENDPOINT = "ws://localhost:3001/graphql";
+  const GRAPHQL_ENDPOINT = `http://${apiURL}/graphql`;
+  const GRAPHQL_WS_ENDPOINT = `ws://${apiURL}/graphql`;
   const wsLink = new WebSocketLink({
     uri: GRAPHQL_WS_ENDPOINT,
     options: {

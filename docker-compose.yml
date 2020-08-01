@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  web:
+    build: './client'
+    image: fullstack-web
+    restart: always
+    environment:
+      - REACT_APP_API_URL
+    ports:
+      - "3000:3000"   
+    tty: true      
+    depends_on:
+      - api    
+  api:
+    build: './server'
+    image: fullstack-api
+    restart: always
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    ports:
+      - "3001:3001"        
+    depends_on:
+      - db      
+  db:
+    image: postgres:12.1
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - pg-data:/var/lib/postgresql/data/
+volumes:
+    pg-data:
