@@ -1,0 +1,27 @@
+version: "3.2"
+
+services:
+  traefik:
+    image: "traefik:v2.1"
+    container_name: "traefik"
+    hostname: "traefik"
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/traefik.yml:ro"
+      # - "./acme.json:/acme.json"
+    labels:
+      - "traefik.enable=true"
+      # - "traefik.http.routers.traefik.tls.certresolver=lets-encr"
+      # - "traefik.http.routers.traefik.tls.domains[0].main=*.$MY_DOMAIN"
+      # - "traefik.http.routers.traefik.tls.domains[0].sans=$MY_DOMAIN"
+
+networks:
+  default:
+    external:
+      name: $DEFAULT_NETWORK

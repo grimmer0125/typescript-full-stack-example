@@ -69,4 +69,23 @@ Current done:
 
 ## Testing on deployed site
 
-Try http://52.230.67.41:3000/, deployed on Azure.
+Try http://fullstack.grimmer.io/, deployed on Azure.
+You can use http://api.grimmer.io/graphql to import restaurant data if there is no data yet.
+
+Command: https://github.com/grimmer0125/fullstack#load-data
+
+### Use reverse proxy, traefik to deploy
+
+traefik: https://docs.traefik.io/
+
+Steps:
+
+1. Install docker, docker-compose and login private docker registry.
+2. Frontend setting: `export REACT_APP_API_URL=api.grimmer.io`
+3. db setting:
+   1. `export POSTGRES_USER=YOUR_USER`
+   2. `export POSTGRES_PASSWORD=YOUR_PASSWORD`
+   3. `export POSTGRES_DB=YOUR_DB`
+4. `docker network create traefik_net`
+5. `docker-compose -f traefik-docker-compose.yml up -d`
+6. `docker-compose -f docker-compose.azure.yml up -d`

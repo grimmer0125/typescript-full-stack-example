@@ -11,6 +11,11 @@ services:
     tty: true      
     depends_on:
       - api    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.rule=Host(`fullstack.$MY_DOMAIN`)"
+      # - "traefik.http.routers.web.tls.certresolver=lets-encr"
   api:
     image: lifeoverflow.azurecr.io/fullstack-api
     restart: always
@@ -23,6 +28,11 @@ services:
       - "3001:3001"        
     depends_on:
       - db      
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.routers.api.rule=Host(`api.$MY_DOMAIN`)"
+      # - "traefik.http.routers.api.tls.certresolver=lets-encr"      
   db:
     image: postgres:12.1
     restart: always
@@ -36,3 +46,8 @@ services:
       - pg-data-azure:/var/lib/postgresql/data/
 volumes:
     pg-data-azure:
+
+networks:
+  default:
+    external:
+      name: $DEFAULT_NETWORK    
