@@ -12,7 +12,7 @@
 1. Execute `yarn start` in client path to launch dev react server, http://localhost:3000. You can also use `VSCode+F5` to use `Debugger for Chrome`.
 2. To launch PostgreSQL database, execute `docker run -p 5432:5432 --name some-postgres -d postgres:12.1`
 3. Use `VSCode+F5` to launch and debug API server, http://localhost:3001 which mainly uses GraphQL and only uses RESTFUL for authentication part. Or just execute `yarn start` to launch it.
-4. (optional) load the restaurant data, follow https://github.com/grimmer0125/fullstack-glints-test/#load-data
+4. (optional) load the restaurant data, follow https://github.com/grimmer0125/full-stack-example#load-data
 
 Open http://localhost:3000 to play this example.
 
