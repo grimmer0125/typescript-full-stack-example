@@ -33,7 +33,19 @@ Open http://localhost:3000 to play this example.
 
 ### Load data
 
-Open http://localhost:3001/graphql, in the playground, use `mutation fetchRawData` to ask the server to load the Data.
+If you do not see restaurant list, please execute this step. If you already see, doing this will duplicate the data.
+
+Open http://localhost:3001/graphql, in the playground, paste
+
+```
+mutation fetchRawData {
+  etlRestaurantRawData(sourceURL:"https://gist.githubusercontent.com/seahyc/7ee4da8a3fb75a13739bdf5549172b1f/raw/f1c3084250b1cb263198e433ae36ba8d7a0d9ea9/hours.csv")
+}
+```
+
+to ask the server to load the Data.
+
+p.s. A few restuarants(~11) in the raw data has duplicate row. Currently the code just choose the first one.
 
 ### Signup and login
 
