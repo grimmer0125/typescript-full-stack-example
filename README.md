@@ -21,12 +21,11 @@ Open http://localhost:3000 to play this example.
 - TypeScript (3.7+)
 - React
 - CRA (Create React App)
-- Redux Hooks
-- Redux Toolkit (which enhances Redux development, such as `write "mutating" logic in Redux Toolkit` since [Immer](https://immerjs.github.io/immer/docs/introduction) inside)
+- [Redux Toolkit](https://redux-toolkit.js.org/) (which enhances Redux development, such as `write "mutating" logic in Redux Toolkit` since [Immer](https://immerjs.github.io/immer/docs/introduction) inside)
 - PostgreSQL
 - [NestJS](https://nestjs.com/) (a Node.js server framework)
-- GraphQL
-- TypeORM
+    - [GraphQL](https://docs.nestjs.com/graphql/quick-start)
+- [TypeORM](https://typeorm.io/)
 - Passport (jwt)
 
 ## Functionality
