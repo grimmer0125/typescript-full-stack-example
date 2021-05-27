@@ -83,7 +83,7 @@ Current done:
 Try http://fullstack.grimmer.io/, deployed on Azure.
 You can use http://api.grimmer.io/graphql to import restaurant data if there is no data yet.
 
-Command: https://github.com/grimmer0125/fullstack#load-data
+Command: [Load data](#load-data)
 
 ### Use reverse proxy, traefik to deploy
 
